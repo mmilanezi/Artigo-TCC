@@ -2,8 +2,9 @@
 
 **Trabalho de Conclusão de Curso — Ciência da Computação | UNISINOS**  
 **Autor:** Matheus Milanezi  
-**Status:** Beta 3.2
-**Version Documentation** 1.3
+**Status:** Beta 4.0
+**Version Documentation** 1.6
+**Version Model ML** 1.6
 
 ---
 
@@ -102,6 +103,9 @@ A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking En
 │  /api/analisar → análise do itinerário                          │
 │  /api/aerodromos → busca de aeródromos                          │
 │  /api/relatorio/pdf → geração de PDF                            │
+│  /registros    → página de histórico de análises (Data Flywheel)│
+│  /api/registros → lista análises com paginação                  │
+│  /api/registros/estatisticas → estatísticas das análises        │
 │  /health       → verificação de saúde                           │
 └────────────────────────────┬────────────────────────────────────┘
                              │
@@ -220,12 +224,12 @@ A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking En
 
 | Modelo | Configuração Principal |
 |--------|----------------------|
-| **Random Forest** | 100 árvores |
-| **XGBoost** | 300 estimadores, `max_depth=6` |
-| **SVM** | Kernel RBF |
-| **MLP (Rede Neural)** | 1 camada oculta, solver Adam |
+| **Random Forest** | 300 árvores, `class_weight=balanced`, `min_samples_leaf=2` |
+| **XGBoost** | 300 estimadores, `max_depth=6`, `learning_rate=0.1`, `subsample=0.8` |
+| **SVM** | Kernel RBF, `C=1.2`, `class_weight=balanced` |
+| **MLP (Rede Neural)** | 2 camadas ocultas [128, 64], ativação ReLU, solver Adam, early stopping |
 
-**Critério de seleção:** Score composto = `60% × Acurácia + 40% × F1 Macro`
+<!-- **Critério de seleção:** Score composto = `60% × Acurácia + 40% × F1 Macro` REMOVIDO DOS CRITÉRIOS - VERSÃO 1.2 -->
 
 **Saída:**
 - `modelos/*.joblib` (todos os modelos serializados)
@@ -285,14 +289,14 @@ Entrada: Itinerário do Voo
 │                                                         │
 │  ┌─────────────┐  ┌──────────┐  ┌─────┐  ┌─────────┐    │
 │  │Random Forest│  │ XGBoost  │  │ SVM │  │   MLP   │    │
-│  │ 100 árvores │  │300 est.  │  │ RBF │  │ 1 camada│    │
+│  │ 300 árvores │  │ 300 est. │  │ RBF │  │ 2 camada│    │
 │  └──────┬──────┘  └────┬─────┘  └──┬──┘  └────┬────┘    │
-│         │              │            │           │       │
+│         │              │           │          │         │
 │  Out-of-Fold Predictions (5-fold Cross-Validation)      │
 └─────────┼──────────────┼────────────┼───────────┼───────┘
           └──────────────┴────────────┴───────────┘
                          │
-            [Vetor de meta-features (4 × C classes)]
+            [Vetor de meta-features (4 modelos × 4 classes = 16)]
                          ↓
 ┌────────────────────────────────────────────────────────┐
 │              Nível 2 — Meta-Learner                    │
@@ -326,20 +330,20 @@ Entrada: Itinerário do Voo
 | `pave_n_tipos` | Número de tipos de ocorrência associados |
 
 #### Features Binárias (12) — Sem transformação
-| Feature | Descrição |
-|---------|-----------|
-| `pave_motor_pistao` | Aeronave com motor à pistão (1/0) |
-| `pave_motor_jato` | Aeronave com motor a jato (1/0) |
-| `pave_vento_forte` | Vento > 10 m/s (1/0) |
-| `pave_rajada_forte` | Rajada > 15 m/s (1/0) |
-| `pave_chuva` | Precipitação > 1 mm (1/0) |
-| `pave_umidade_alta` | Umidade > 90% (1/0) |
-| `pave_voo_noturno` | Horário noturno (20h–6h) (1/0) |
-| `pave_fase_critica` | Fase crítica do voo (decolagem/pouso) (1/0) |
-| `pave_fase_solo` | Fase em solo (táxi) (1/0) |
-| `pave_instrucao` | Voo de instrução (1/0) |
-| `pave_operacao_regular` | Operação aérea regular (1/0) |
-| `pave_tipo_grave` | Tipo de ocorrência historicamente grave (1/0) |
+| Feature | Descrição | Limiar | Fonte |
+|---------|-----------|--------|-------|
+| `pave_motor_pistao` | Aeronave com motor à pistão (1/0) | — | — |
+| `pave_motor_jato` | Aeronave com motor a jato (1/0) | — | — |
+| `pave_vento_forte` | Vento acima do limiar de windshear crítico (1/0) | > 7,5 m/s (15 kt) | ICAO Annex 3 §7.4.3 / RBAC 121.429(a) |
+| `pave_rajada_forte` | Rajada significativa — gust ≥ 5 m/s acima de 7,5 m/s (1/0) | > 12,5 m/s | ICAO Annex 3 §4.1.5.2 c)2) |
+| `pave_chuva` | Qualquer precipitação presente (1/0) | > 0 mm | — |
+| `pave_umidade_alta` | Umidade próxima ao limiar de nevoeiro (1/0) | > 90% | ICAO Annex 3 §4.4.2.3 b) |
+| `pave_voo_noturno` | Horário noturno (1/0) | 18h–6h | — |
+| `pave_fase_critica` | Fase crítica do voo: decolagem, subida, aproximação final, pouso (1/0) | — | — |
+| `pave_fase_solo` | Fase em solo: táxi, estacionamento (1/0) | — | — |
+| `pave_instrucao` | Voo de instrução (1/0) | — | — |
+| `pave_operacao_regular` | Operação aérea regular (1/0) | — | — |
+| `pave_tipo_grave` | Tipo de ocorrência historicamente grave no CENIPA (1/0) | — | — |
 
 #### Features Categóricas (5) — OneHotEncoder (~164 colunas)
 | Feature | Categorias | Colunas Geradas |
@@ -372,17 +376,33 @@ O sistema converte as classes do modelo em **4 status operacionais**:
 | `APTO_SEGURO`   | Verde    | Classe 0 com confiança ≥ 90% |
 | `APTO_MODERADO` | Laranja  | Classe 1 (qualquer confiança) ou limítrofe |
 | `NAO_APTO`      | Vermelho | Classe 2 ou 3      |
-| `INCONCLUSIVO`  | Cinza    | Confiança máxima < 42% **ou** Classe 3 com ≥ 85% de probabilidade mas meteorologia segura (contradição detectada) |
+| `INCONCLUSIVO`  | Cinza    | Confiança máxima < 42% **ou** Classe 3 com ≥ 60% de probabilidade com meteorologia completamente segura (contradição detectada) **ou** dados meteorológicos reais indisponíveis (análise com medianas históricas) |
 
-**Overrides de Segurança Meteorológica** (quando dados reais são fornecidos):
+**Overrides de Segurança Meteorológica** — aplicados após a predição do modelo, somente quando dados meteorológicos reais estão disponíveis (INMET ou Open-Meteo). Organizados em dois níveis:
 
-|   Condição   |  Limiar  |       Ação       |
-|--------------|----------|------------------|
-| Vento        | > 15 m/s | Força `NAO_APTO` |
-| Rajada       | > 20 m/s | Força `NAO_APTO` |
-| Precipitação | > 8 mm   | Força `NAO_APTO` |
-| Umidade      | > 95%    | Força `NAO_APTO` |
-| Temperatura  | < 1 °C   | Força `NAO_APTO` |
+#### Nível L1 — Forças `APTO_MODERADO` (condições adversas)
+
+| Condição | Limiar | Fonte Regulatória |
+|----------|--------|-------------------|
+| Vento | > 10 m/s (≈ 20 kt) | JAR/FAR 25.237 — mínimo de certificação para vento cruzado (TP-2001-217, p. 18) |
+| Rajada | > 12,5 m/s | ICAO Annex 3 §4.1.5.2 c)2): gust ≥ 5 m/s acima do limiar crítico de 7,5 m/s |
+| Precipitação | > 2,5 mm/h | ANAC Glossário: início de "Chuva Moderada" |
+| Nevoeiro *(apenas fases de superfície)* | umidade ≥ 90% **e** vento < 2,5 m/s | WMO Hazardous Phenomena — Fog (2025) + ANAC Meteorologia Aeronáutica: ventos fracos (≤ 5 kt) com umidade próxima a 100% favorecem nevoeiro de radiação |
+| Risco de gelo *(todas as fases)* | temp < 2°C **e** (umidade > 90% **ou** precipitação > 0) | Brandão (2016) — FGA Descomplicada: formação de gelo entre 0°C e +2°C com gotículas super-resfriadas; RBAC 121 Art. 121.629(b) |
+
+#### Nível L2 — Força `NAO_APTO` (condições críticas)
+
+| Condição | Limiar | Fonte Regulatória |
+|----------|--------|-------------------|
+| Vento | > 17 m/s (≈ 34 kt) | ICAO Annex 3 §5.1.1: limiar de alerta de ciclone tropical |
+| Rajada | > 25 m/s | TP-2001-217, p. 1: limite superior de microexplosão (microburst) |
+| Precipitação | > 7,5 mm/h | ANAC Glossário: início de "Chuva Forte" |
+| Nevoeiro denso *(apenas fases de superfície)* | umidade ≥ 95% **e** vento < 1,0 m/s | WMO Hazardous Phenomena — Fog (2025) + ANAC: calma extrema com saturação favorece nevoeiro denso (vis < 1.000 m) |
+| Gelo confirmado *(todas as fases)* | temp < 0°C **e** (umidade > 90% **ou** precipitação > 0) | ICAO Annex 3 §4.6.2.2: temperatura sub-zero como condição de gelo confirmada; RBAC 121 Art. 121.629(b); WMO Fog (2025): nevoeiro congelante deposita gelo de rime em aeronaves |
+
+> **Nota sobre nevoeiro vs. gelo:** o nevoeiro é um fenômeno de superfície (ANAC: "ocorre junto à superfície") e por isso seus limiares só são verificados nas fases **crítica** (decolagem, subida, aproximação final, pouso) e **solo** (táxi, estacionamento). O risco de gelo, por sua vez, aplica-se a **todas as fases**, pois aeronaves em cruzeiro podem penetrar nuvens congelantes (FGA Descomplicada, Brandão, 2016).
+
+> **Nota sobre `meteo_benigno`:** condição interna que determina se as condições meteorológicas são completamente benignas. Usada para detectar contradições: se o modelo prediz Acidente com ≥ 60% de confiança (`LIMIAR_CONTRADICAO = 0.60`) mas `meteo_benigno = True`, o sistema retorna `INCONCLUSIVO` em vez de `NAO_APTO`, sinalizando possível viés residual de amostragem geográfica do CENIPA. Adicionalmente, quando dados meteorológicos reais não estão disponíveis (`fonte_meteo = "padrao"`), o sistema também retorna `INCONCLUSIVO` para análises que seriam `APTO_SEGURO` ou `APTO_MODERADO`, uma vez que medianas históricas não refletem as condições reais do voo.
 
 ---
 
@@ -390,12 +410,14 @@ O sistema converte as classes do modelo em **4 status operacionais**:
 
 |         Métrica          | Valor  |
 |--------------------------|--------|
-| **Acurácia**             | 88,03% |
-| **F1 Macro**             | 0,7414 |
-| **ROC AUC**              | 0,9516 |
-| **Score Composto**       | 0,8247 |
-| **Tempo de Treinamento** | ~18 minutos (1082 segundos) |
+| **Acurácia**             | 87,54%  |
+| **F1 Macro**             | 0,7428 |
+| **F1 Weighted**          | 0,8753 |
+| **ROC AUC**              | 0,95,07|
+| **Tempo de Treinamento** | ~17 minutos (991 segundos) |
 | **SMOTE Aplicado**       | Sim    |
+| **Passthrough**          | Não (`passthrough=False`) |
+| **Data de Treinamento**  | 19/04/2026 |
 
 **Distribuição do conjunto de teste:**
 
@@ -458,6 +480,7 @@ Responsável pela interface com o usuário.
 | Geração de PDF | `src/pdf_relatorio.py` | Laudo técnico em PDF via ReportLab |
 | CLI interativo | `src/entrada.py` | Entrada manual via terminal |
 | Demonstração | `src/demo.py` | 4 cenários pré-configurados para demo |
+| Registro de análises | `src/registro.py` | Persistência em SQLite — Data Flywheel para retreino futuro |
 
 ---
 
@@ -486,6 +509,10 @@ Preenchimento → Validação → POST /api/analisar
     → Exibição do resultado com recomendações
     → (Opcional) Download do PDF
 ```
+
+### Histórico de Análises (Data Flywheel)
+
+A interface web inclui uma página dedicada (`/registros`) que exibe o histórico de todas as análises realizadas, com filtro por status e paginação. Cada análise é armazenada em banco SQLite (`dados/registros.db`) com ID único, dados do itinerário, resultado e campos para rotulação humana futura — formando um ciclo de melhoria contínua do modelo.
 
 ### Restrições
 - Data futura limitada a **15 dias** (limite da API Open-Meteo para previsão)
@@ -549,7 +576,9 @@ Desenvolvimento/
 │   ├── fase2b_voos_normais.py         # Geração de 5.000 voos normais sintéticos
 │   ├── fase3_processar_dados.py       # Feature engineering + SMOTE + split
 │   ├── fase4_treinar_modelo.py        # Treinamento dos 4 modelos base
-│   └── fase5_stacking.py             # Treinamento do Stacking Ensemble
+│   ├── fase4_analise_hiperparametros.py  # Análise de sensibilidade de hiperparâmetros
+│   ├── fase5_stacking.py             # Treinamento do Stacking Ensemble
+│   └── versionar_modelo.py            # Versionamento e ativação de modelos
 │
 ├── src/                               # Módulos do sistema de inferência
 │   ├── config.py                      # Constantes globais, caminhos, limiares
@@ -562,7 +591,8 @@ Desenvolvimento/
 │   ├── relatorio.py                   # Lógica de status, overrides, recomendações
 │   ├── pdf_relatorio.py               # Geração de PDF (ReportLab)
 │   ├── entrada.py                     # Coleta de dados via terminal
-│   └── demo.py                        # Cenários de demonstração
+│   ├── demo.py                        # Cenários de demonstração
+│   └── registro.py                    # Registro de análises em SQLite (Data Flywheel)
 │
 ├── web/                               # Aplicação web Flask
 │   ├── app.py                         # Rotas Flask e endpoints da API
@@ -572,18 +602,24 @@ Desenvolvimento/
 │       └── js/main.js                 # Lógica frontend (679 linhas)
 │
 ├── modelos/                           # Modelos treinados e serializados
-│   ├── stacking_ensemble.joblib       # Modelo final (produção)
+│   ├── stacking_ensemble.joblib       # Modelo final (produção — v1.6)
 │   ├── melhor_modelo.joblib           # Melhor modelo individual (Fase 4)
 │   ├── random_forest.joblib
 │   ├── xgboost.joblib
 │   ├── svm.joblib
 │   ├── rede_neural_(mlp).joblib
-│   ├── modelo_selecionado.json        # Metadados do modelo
+│   ├── modelo_selecionado.json        # Metadados do modelo ativo
 │   ├── relatorio_fase4.txt            # Relatório de avaliação da Fase 4
-│   └── relatorio_fase5.txt            # Relatório de avaliação da Fase 5
+│   ├── relatorio_fase5.txt            # Relatório de avaliação da Fase 5
+│   ├── hiperparametros/               # Resultados da análise de hiperparâmetros
+│   │   ├── relatorio_hiperparametros.txt
+│   │   └── resultados.json
+│   └── historico/                     # Versões anteriores dos modelos
+│       └── versoes.json
 │
 ├── dados/
-│   ├── aerodromos_brasil.json         # Cache de aeródromos brasileiros
+│   ├── aerodromos_brasil.json         # Cache de aeródromos brasileiros (OurAirports)
+│   ├── registros.db                   # SQLite com histórico de análises (Data Flywheel)
 │   ├── dados_brutos/                  # Dados originais CENIPA, INMET
 │   ├── dados_integrados/              # Dataset integrado (Fase 2)
 │   └── dados_processados/             # Features processadas (Fase 3)
