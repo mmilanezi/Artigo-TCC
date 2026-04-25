@@ -1,0 +1,670 @@
+%
+% Artigo TCC II - Matheus Grassi Milanezi
+% Sistema Inteligente de Apoio à Tomada de Decisão na Aviação Civil
+% Versão 2 — baseada no artigo TCC I (2025)
+%
+\documentclass[english,brazilian]{UNISINOSartigo}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{bibentry}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{newfloat}
+\usepackage{setspace}
+
+\usepackage[alf]{abntex2cite}
+
+\autor{MILANEZI}{MATHEUS GRASSI}
+\titulo{Sistema Inteligente de Apoio à Tomada de Decisão na Aviação Civil, baseado
+em Análise de Dados e Aprendizado de Máquina para Prevenção de Acidentes}
+\subtitulo{}
+\orientador[Prof.~Ms.~Dr.]{Kunst}{Rafael}
+\local{Porto Alegre}
+\ano{2025}
+\unidade{Unidade Acadêmica de Graduação}
+\curso{Curso de Bacharelado em Ciência da Computação}
+\natureza{%
+Artigo apresentado como requisito parcial para obtenção do título de
+Bacharel em Ciência da Computação, pelo Curso de Ciência da Computação da
+Universidade do Vale do Rio dos Sinos (UNISINOS)}
+
+\begin{document}
+\capa
+\folhaderosto
+
+\tituloArtigo{Sistema Inteligente de Apoio à Tomada de Decisão na Aviação Civil,
+baseado em Análise de Dados e Aprendizado de Máquina para Prevenção de Acidentes}{%
+Intelligent Decision Support System for Civil Aviation, based on Data Analysis
+and Machine Learning for Accident Prevention}
+
+\autorArtigo{Matheus Grassi Milanezi\footnote{Graduando do curso de Bacharelado em
+Ciências da Computação da Universidade do Vale do Rio dos Sinos (UNISINOS).
+E-mail: mmilanezi@edu.unisinos.br}}
+
+\autorArtigo{Rafael Kunst\footnote{Orientador Professor Ms. Dr. Rafael Kunst do
+curso de Ciências da Computação da Universidade do Vale do Rio dos Sinos (UNISINOS).
+E-mail: rafaelkunst@unisinos.br}}
+
+%=======================================================================
+% Resumo em Português
+%=======================================================================
+\begin{abstract}
+% TODO: preencher resumo (100–250 palavras)
+
+\palavraschave{Aviação civil. Segurança operacional. Aprendizado de máquina.
+Análise pré-voo. Inteligência artificial.}
+\end{abstract}
+
+\begin{otherlanguage}{english}
+\singlespacing
+\begin{abstract}
+% TODO: fill abstract
+\end{abstract}
+\palavraschave{Civil aviation. Operational safety. Machine learning. Pre-flight
+analysis. Artificial intelligence.}
+\end{otherlanguage}
+
+%=======================================================================
+\section{Introdução}
+%=======================================================================
+
+A aviação civil consolidou-se, ao longo das últimas décadas, como um dos
+meios de transporte mais seguros do mundo graças ao avanço contínuo de
+tecnologias, práticas de gerenciamento de risco e sistemas regulatórios rigorosos.
+Entretanto, a crescente complexidade das operações, influenciada por variabilidade
+meteorológica, pressões operacionais, diversidade de aeronaves e aumento do
+tráfego, impõe novos desafios à manutenção da segurança operacional. Nesse
+contexto, o planejamento pré-voo torna-se uma etapa importante, pois permite a
+identificação antecipada de condições que podem comprometer a operação e a
+adoção de medidas preventivas antes que tais riscos se manifestem em voo.
+
+Ferramentas tradicionais de avaliação de risco pré-voo, como o \textit{Flight Risk
+Assessment Tool} (FRAT), desempenham papel importante, mas apresentam
+limitações reconhecidas na literatura. Estudos indicam que métodos convencionais
+dependem fortemente de entradas manuais, sofrem influência do viés humano e não
+integram automaticamente variáveis meteorológicas, históricas e operacionais.
+\citeonline{WALDEN2023} destacam que a estrutura atual do FRAT reduz a sensibilidade
+da análise em cenários dinâmicos e que modelos de \textit{Machine Learning} podem
+modernizar essa abordagem ao fornecer uma categorização de risco mais
+consistente e menos subjetiva.
+
+Paralelamente, a evolução recente da Inteligência Artificial (IA) tem
+demonstrado grande potencial para fortalecer os sistemas de segurança
+aeronáutica. Pesquisas mostram que técnicas supervisionadas podem prever
+eventos de segurança, antecipar condições meteorológicas adversas e apoiar
+decisões com maior precisão \cite{LIU2024}. Entretanto, cada estudo tende a
+abordar apenas um aspecto da operação --- seja clima, manutenção ou dados
+históricos --- sem propor uma estrutura integrada. \citeonline{ZIEJA2015}, por
+exemplo, enfatizam que sistemas de informação têm papel essencial na gestão da
+segurança, mas ainda se baseiam majoritariamente em estatística descritiva,
+necessitando de modelos preditivos avançados e integração em tempo real.
+
+Além disso, discussões atuais sobre segurança operacional apontam uma
+mudança de paradigma do \textit{Safety-I} para o \textit{Safety-II}. Segundo
+\citeonline{ZIAKKAS2024}, a IA pode atuar como elemento central nesse novo
+paradigma ao permitir compreender não apenas por que operações falham, mas
+também por que dão certo, ampliando a resiliência do sistema e apoiando decisões
+em cenários complexos.
+
+Diante desse panorama, apresenta-se uma lacuna importante: embora existam
+avanços em IA para previsão de eventos específicos e iniciativas isoladas de
+modernização do FRAT, a literatura necessita de soluções integradas que
+consolidem múltiplas dimensões do risco pré-voo --- como meteorológica,
+operacional, histórica e de rota --- em uma única análise automatizada. Assim,
+este trabalho propõe o desenvolvimento de um sistema inteligente de apoio à
+tomada de decisão na aviação civil capaz de estimar automaticamente o risco
+pré-voo combinando tais variáveis, utilizando modelos de aprendizado de máquina
+e alinhando-se aos princípios do \textit{Safety-II}.
+
+O estudo possui dois objetivos principais. O objetivo geral é desenvolver um
+sistema preditivo de apoio à decisão pré-voo que utilize múltiplas variáveis
+operacionais e técnicas de Inteligência Artificial para classificar automaticamente o
+risco associado a uma operação aérea. No âmbito dos objetivos específicos,
+busca-se investigar a aplicabilidade de diferentes modelos de aprendizado de
+máquina --- como XGBoost, Random Forest, \textit{Support Vector Machine} e Redes
+Neurais Artificiais --- na previsão do risco pré-voo, ao mesmo tempo em que se
+estrutura um processo integrado capaz de combinar variáveis meteorológicas,
+operacionais e históricas em uma única análise, reduzindo a subjetividade presente
+nos métodos tradicionais. Além disso, pretende-se validar o sistema por meio de
+simulações que evidenciem sua capacidade de apoiar decisões com maior precisão,
+consistência e proatividade.
+
+Além disso, este trabalho estabelece as bases conceituais e metodológicas
+para a segunda etapa do projeto, a ser desenvolvida na disciplina de TCC II. Nessa
+fase, serão implementados e testados os modelos preditivos propostos, bem como
+desenvolvido o sistema inteligente de apoio à decisão, integrando os dados e
+técnicas aqui definidos em uma solução funcional voltada ao planejamento pré-voo.
+
+Com isso, o trabalho busca contribuir para a evolução das práticas de
+segurança operacional na aviação civil, agregando ferramentas modernas de análise
+preditiva ao processo de planejamento pré-voo e oferecendo uma abordagem
+inovadora, alinhada às tendências internacionais e às necessidades regulatórias e
+operacionais do setor aeronáutico brasileiro.
+
+%=======================================================================
+\section{Fundamentação Teórica}
+%=======================================================================
+
+A presente seção tem por objetivo apresentar os fundamentos teóricos que
+sustentam o desenvolvimento deste trabalho. Considerando que a pesquisa aborda
+a aplicação de Inteligência Artificial no contexto da Aviação Civil, torna-se
+necessário compreender, previamente, os conceitos essenciais da IA e as
+abordagens já propostas que buscam integrar tecnologia e segurança operacional.
+
+\subsection{História e evolução da segurança operacional na aviação civil}
+
+A segurança operacional constitui um dos pilares centrais da aviação civil
+desde o surgimento do transporte aéreo comercial. Ao longo das décadas, a
+compreensão sobre como prevenir acidentes evoluiu profundamente, impulsionada
+por avanços tecnológicos, debates conceituais e pelo aumento da complexidade das
+operações aéreas. Como destaca \citeonline{HARMS2020}, a trajetória da segurança
+pode ser entendida pela mudança de foco entre três grandes grupos de fatores:
+técnicos, humanos e organizacionais/sistêmicos.
+
+Nas primeiras décadas da aviação comercial, especialmente entre os anos
+1950 e 1970, a maioria dos acidentes era atribuída a falhas técnicas, estruturais ou
+de projeto. Consequentemente, os esforços de segurança se concentravam quase
+que exclusivamente na melhoria do desempenho mecânico, na padronização de
+procedimentos de manutenção, na certificação de aeronaves e no fortalecimento da
+confiabilidade dos equipamentos. Com o amadurecimento tecnológico e a redução
+das falhas mecânicas, o setor identificou o erro humano como o principal fator
+contribuinte para acidentes, deslocando a atenção para treinamento, ergonomia,
+fatores cognitivos e cultura organizacional.
+
+A partir da década de 1990, consolidou-se um novo entendimento: o acidente
+não é resultado de um único erro humano, mas sim o produto de falhas sucessivas
+dentro de um sistema complexo. Nesse período, como enfatiza \citeonline{HARMS2020},
+reconheceu-se que as condições organizacionais, pressões operacionais, limitações
+do ambiente e processos internos influenciavam o desempenho humano. Essa
+mudança marcou o início de uma transição conceitual e prática, de um modelo que
+em sua essência era basicamente reativo para um modelo progressivamente
+proativo e preditivo.
+
+Esse movimento foi posteriormente formalizado no contraste entre
+\textit{Safety-I} e \textit{Safety-II}, conforme discute \citeonline{ZIAKKAS2024}.
+O \textit{Safety-I} define segurança como a ausência de falhas e atua de forma
+reativa, investigando o que deu errado após sua ocorrência. Já o \textit{Safety-II}
+entende segurança como a capacidade de garantir que ``as coisas deem certo'',
+enfatizando adaptação, resiliência e antecipação de riscos. Essa visão ampliada
+está diretamente associada à evolução dos Sistemas de Gerenciamento da
+Segurança Operacional (SMS), que incorporam práticas de monitoramento contínuo,
+cultura de segurança, identificação precoce de ameaças e mitigação proativa.
+
+Nesse mesmo contexto, \citeonline{ZIEJA2015} mostram que os sistemas de
+informação passaram a desempenhar papel fundamental nessa nova abordagem.
+O uso de bases de dados, métodos estatísticos e ferramentas de análise permite
+identificar correlações entre incidentes e acidentes, detectar tendências de falhas
+e compreender padrões operacionais. Com isso, a tomada de decisão passa a ser
+baseada em evidências e indicadores, reduzindo a margem de erro humano e
+fortalecendo a gestão de risco antes que ameaças se materializem.
+
+Paralelamente, o setor enfrenta hoje um cenário controverso, onde a aviação
+atingiu níveis tão elevados de segurança que se torna cada vez mais difícil medir
+melhorias ou identificar indícios iniciais de eventos adversos, justamente porque
+acidentes são raros. Como observa \citeonline{HARMS2020}, a ausência de ocorrências
+relevantes desafia os métodos tradicionais de vigilância e exige novas formas de
+análise capazes de revelar riscos ocultos.
+
+Diante dessa realidade, o avanço para um modelo plenamente proativo e
+preditivo aponta naturalmente para o uso de técnicas de Inteligência Artificial (IA)
+e aprendizado de máquina. Esses sistemas oferecem a capacidade de processar
+grandes volumes de dados, identificar padrões não perceptíveis ao analista humano
+e antecipar condições que possam levar a um acidente. Assim, configuram-se como
+a próxima etapa da evolução da segurança operacional na aviação comercial,
+alinhada ao paradigma \textit{Safety-II} e às exigências de um setor cada vez mais
+complexo, dinâmico e orientado por dados.
+
+\subsection{Avaliação de risco e o conceito de análise pré-voo}
+
+A avaliação de risco pré-voo constitui uma das etapas mais relevantes do
+gerenciamento da segurança operacional, pois permite identificar perigos, avaliar a
+exposição ao risco e adotar medidas de mitigação antes da decolagem. Ferramentas
+como o \textit{Flight Risk Assessment Tool} (FRAT) foram desenvolvidas para
+estruturar esse processo, mensurando o nível de risco associado a uma operação
+aérea antes que ela ocorra. Esses instrumentos utilizam questionários e pontuações
+baseadas em fatores como condições meteorológicas, experiência e proficiência do
+piloto, características da aeronave, manutenção, familiaridade com o aeródromo e
+perfil da missão.
+
+Como apresentado por \citeonline{WALDEN2023}, durante o planejamento pré-voo
+o piloto deve considerar múltiplos elementos antes de decidir se irá voar, devendo
+analisar utilizando ferramentas como o FRAT. Essa análise sistemática também é
+reforçada por \textit{checklists} como o PAVE, acrônimo de \textit{Pilot, Aircraft,
+enVironment} e \textit{External Pressures}, que orienta o piloto a avaliar os
+principais itens de risco.
+
+Apesar de amplamente utilizados, estudos recentes apontam limitações no
+FRAT tradicional. Essas ferramentas dependem de entradas manuais e da
+interpretação subjetiva do operador, o que pode gerar inconsistências, vieses
+cognitivos e subestimação de riscos \cite{WALDEN2023}. Além disso, os modelos
+atuais não integram dados históricos de acidentes, relatórios de incidentes ou
+análises automatizadas, reduzindo sua precisão e abrangência.
+\citeonline{WALDEN2023} destacam que muitos FRATs apresentam baixa
+acessibilidade, questionários incompletos, elevado tempo de preenchimento e
+ausência de requisitos regulatórios que incentivem seu uso contínuo. Também não
+incorporam a probabilidade de ocorrência dos perigos e, consequentemente, não
+fornecem uma estimativa quantitativa robusta do risco.
+
+Buscando superar essas limitações, \citeonline{WALDEN2023} propõem a
+modernização do FRAT por meio do uso de técnicas de aprendizado de máquina,
+como XGBoost, Random Forest, redes neurais e modelos baseados em BERT,
+treinadas com bases históricas, como os registros do \textit{National Transportation
+Safety Board} (NTSB). Segundo os autores, esses modelos são capazes de prever
+categorias de risco com base no perfil de voo e em padrões presentes em décadas
+de acidentes e incidentes, reduzindo o viés humano e permitindo uma avaliação
+mais consistente e preditiva.
+
+Em linha com essa evolução, \citeonline{FELDMAN2023} descrevem soluções de
+análise pré-voo utilizadas pelo \textit{In-Time Aviation Safety Management System}
+(IASMS) da NASA, que reúne dados de sistemas aeronáuticos e fontes ambientais
+para prever perigos e apresentar informações preditivas aos operadores durante o
+planejamento. Esses sistemas demonstram que a integração de \textit{dashboards}
+de risco com análise automatizada aumenta a consciência situacional e oferece
+suporte à tomada de decisão, especialmente quando envolvem múltiplas aeronaves,
+rotas complexas ou cenários meteorológicos dinâmicos.
+
+Outro aspecto crítico da avaliação pré-voo diz respeito à meteorologia.
+\citeonline{LIU2024} ressaltam que o crescimento do transporte aéreo intensifica a
+necessidade de suporte meteorológico de alta precisão, uma vez que fenômenos
+perigosos --- como turbulência severa, mudanças bruscas de direção do vento
+(\textit{windshear}), tempestades convectivas e baixa visibilidade --- impactam
+diretamente a segurança operacional. Para os autores, a melhoria da capacidade de
+alerta antecipado de tempo severo é uma das principais funções dos serviços de
+meteorologia aeronáutica. Modelos de aprendizado de máquina, como SVMs
+treinados com dados de estações meteorológicas, têm demonstrado elevada
+capacidade de prever condições adversas e antecipar situações em que o clima
+pode decidir entre um voo seguro e um acidente.
+
+Essa compreensão reforça um ponto amplamente discutido na literatura de
+segurança operacional: muitos acidentes têm origem ainda na fase de preparação.
+De acordo com Wright (2019, \textit{apud} \citeauthor{WALDEN2023}, \citeyear{WALDEN2023}),
+falhas de gestão de risco foram causa raiz de quase 50\% dos acidentes fatais com
+aeronaves de negócios, e a maioria poderia ser rastreada a deficiências no
+planejamento pré-voo.
+
+Assim, a análise pré-voo emerge como uma fase determinante para
+interromper precursões de risco antes que avancem no sistema e evoluam para um
+incidente ou acidente. A incorporação de inteligência artificial e modelos preditivos,
+nesse sentido, representa uma resposta direta às limitações dos métodos
+tradicionais de avaliação de risco e às evidências históricas que mostram que
+decisões tomadas no solo são frequentemente o ponto em que a segurança do voo
+é definida.
+
+\subsection{A importância dos dados de voo e relatórios de incidentes}
+
+Os dados de voo, os registros de manutenção e os relatórios de incidentes
+constituem a base da gestão moderna da segurança operacional. A capacidade de
+analisar grandes volumes de informações referentes às operações aéreas tornou-se
+importante para compreender o comportamento do sistema e identificar
+vulnerabilidades antes que elas evoluam para eventos mais graves. Nesse sentido,
+\citeonline{DEMIR2024} destacam que a análise sistemática de conjuntos massivos
+de dados permite identificar padrões de risco, detectar anomalias operacionais e
+aprimorar a capacidade preditiva dos modelos de segurança.
+
+Essa perspectiva é reforçada por \citeonline{ZIEJA2015}, que destacam o papel
+dos sistemas de informação na identificação de relações entre variáveis críticas,
+como falhas técnicas, fatores humanos e condições operacionais. Segundo os
+autores, a análise de segurança tem como ponto de partida dados históricos de
+eventos de voo e indicadores operacionais, os quais permitem compreender padrões
+recorrentes e orientar decisões mais precisas. Essa abordagem estatística também
+revela regularidades e possíveis relações causais, ajudando a responder questões
+fundamentais como: que problema está sendo enfrentado? quais são suas causas
+raízes? e quais fatores influenciam com maior probabilidade a ocorrência de
+fenômenos perigosos?
+
+O uso contínuo desses registros não apenas sustenta avaliações de
+desempenho e auditorias de segurança, mas também possibilita o desenvolvimento
+de relatórios estatísticos e indicadores que medem a eficácia de programas de
+treinamento, ações mitigadoras e sistemas de prevenção de acidentes aéreos.
+Assim, dados bem estruturados permitem uma avaliação proativa e fundamentada
+do desempenho operacional, facilitando decisões que minimizam erros e aumentam
+a confiabilidade das operações aéreas.
+
+A literatura também evidencia que a qualidade e a quantidade desses dados
+têm impacto direto na eficácia dos sistemas de segurança. Conforme afirmam
+\citeonline{DEMIR2024}, modelos baseados em inteligência artificial dependem de
+dados históricos de voo, registros de manutenção e relatórios de incidentes para
+aprender continuamente com as ocorrências operacionais e produzir previsões
+confiáveis. Da mesma forma, \citeonline{HARMS2020} enfatiza que a segurança na
+aviação está cada vez mais associada à análise de dados, uma vez que a avaliação
+do desempenho de segurança de uma companhia aérea é, em grande parte,
+fundamentada na capacidade de interpretar adequadamente seus registros
+operacionais.
+
+Nesse contexto, os dados tornam-se não apenas insumos técnicos, mas
+elementos estruturantes da segurança operacional. Sem bases de dados
+consistentes, extensas e confiáveis, não há como desenvolver modelos preditivos
+robustos, identificar precursores de risco ou sustentar práticas proativas alinhadas
+ao paradigma \textit{Safety-II}. Dessa forma, a gestão de dados emerge como
+componente essencial para qualquer iniciativa de inteligência artificial aplicada à
+segurança de voo, incluindo ferramentas de análise pré-voo como a proposta neste
+trabalho.
+
+\subsection{Inteligência artificial e aprendizado de máquina aplicados à
+segurança aeronáutica}
+
+A Inteligência Artificial (IA) e o Aprendizado de Máquina (\textit{Machine
+Learning} --- ML) têm desempenhado um papel cada vez mais relevante na
+segurança aeronáutica, especialmente em um cenário onde a complexidade das
+operações aéreas, a quantidade de dados gerados e a necessidade por decisões
+rápidas e precisas desafiam os métodos tradicionais de análise. A aviação moderna
+tornou-se um terreno fértil para soluções baseadas em dados, pois combina um
+sistema de altíssimo nível de segurança com uma infraestrutura de registro
+detalhado de eventos, falhas, condições meteorológicas e parâmetros operacionais.
+Esse ambiente fornece o que algoritmos de IA mais precisam: grandes volumes de
+dados estruturados, contínuos e historicamente ricos.
+
+Segundo \citeonline{DEMIR2024}, o uso crescente de IA reflete um movimento
+global em direção a sistemas preditivos capazes de identificar riscos antes que se
+materializem. Os autores mostram que a análise de grandes conjuntos de dados
+aeronáuticos permite capturar padrões ocultos, detectar anomalias, prever
+condições adversas e auxiliar na tomada de decisão em tempo real.
+Já \citeonline{HARMS2020} destaca que a segurança na aviação está cada vez mais
+associada à análise automatizada de dados, afirmando o quão importante é na
+avaliação do desempenho de segurança operacional.
+
+Esses avanços seguem a mesma lógica do paradigma \textit{Safety-II}, conforme
+apresentado por \citeonline{ZIAKKAS2024}, que propõe uma visão proativa da
+segurança operacional, centrada em compreender como as operações dão certo e
+como reforçar a resiliência do sistema. Assim, a IA surge não apenas como uma
+ferramenta tecnológica, mas como uma evolução natural das práticas de segurança
+aeronáutica.
+
+\subsubsection{Fundamentos de Inteligência Artificial e Aprendizado de Máquina no
+contexto da aviação}
+
+A Inteligência Artificial (IA) refere-se ao desenvolvimento de sistemas
+capazes de executar tarefas que normalmente exigiriam raciocínio humano, como
+classificação, predição e tomada de decisão. Segundo \citeonline{KUHL2022}, uma
+das dificuldades recorrentes no uso do termo é que ele é frequentemente
+confundido com aprendizado de máquina, embora IA seja um conceito mais amplo
+que engloba múltiplas abordagens para criar agentes capazes de perceber e agir
+em um ambiente de forma racional.
+
+Dentro desse campo, o Aprendizado de Máquina (\textit{Machine Learning} --- ML)
+representa o conjunto de métodos que permitem que modelos aprendam padrões
+automaticamente a partir dos dados, sem que todas as regras sejam explicitamente
+programadas. \citeonline{KUHL2022} explicam que modelos de ML podem resolver
+problemas reais ao ``aprender'' relações internas nos dados e ajustar seu
+comportamento com base nessa experiência, em vez de dependerem apenas de
+instruções pré-programadas.
+
+No contexto da aviação, o ML encontra aplicações naturais em tarefas que
+envolvem uma grande quantidade de dados históricos, variáveis fortemente
+correlacionadas, necessidade de previsões rápidas e risco elevado associado ao
+erro humano. Essas características fazem da aviação um ambiente ideal para
+modelos que aprendem a partir do comportamento passado e conseguem estimar,
+com antecedência, condições potencialmente perigosas.
+
+O treino desses modelos consiste em fornecer exemplos históricos e permitir
+que os algoritmos aprendam relações matemáticas entre variáveis, representando o
+comportamento do sistema em cenários reais. Entre as categorias existentes, aquela
+que mais se destaca nas aplicações aeronáuticas é o aprendizado supervisionado,
+no qual os dados possuem rótulos conhecidos. Conforme ressaltam \citeonline{KUHL2022},
+esse tipo de aprendizado busca criar um modelo capaz de generalizar a partir de
+exemplos rotulados.
+
+Na prática da aviação, esse paradigma é amplamente utilizado para lidar com
+problemas como: identificar se um voo representa ``risco baixo'', ``médio'' ou
+``alto''; prever se uma aproximação será ``estável'' ou ``instável''; classificar
+condições meteorológicas como ``seguras'' ou ``perigosas''; e prever ocorrência
+ou não de eventos de segurança. Essas aplicações encaixam-se diretamente no
+modelo supervisionado porque envolvem padrões já observados (eventos passados)
+e rotulagem operacional compatível (eventos de risco já registrados).
+
+\subsubsection{Modelos de Aprendizado de Máquina utilizados na segurança
+aeronáutica}
+
+A literatura sobre segurança aeronáutica demonstra que diferentes modelos
+de Aprendizado de Máquina têm sido utilizados para analisar dados operacionais,
+prever eventos de risco e apoiar decisões críticas na aviação. Embora haja um
+amplo conjunto de algoritmos disponíveis, alguns métodos se destacam por sua
+capacidade de lidar com bases de dados tabulares, variáveis altamente
+correlacionadas, cenários complexos e, principalmente, pela robustez necessária
+em sistemas de segurança. Nesse contexto, modelos baseados em técnicas de
+\textit{ensemble}, máquinas de vetores de suporte e redes neurais artificiais
+aparecem de forma recorrente nas pesquisas analisadas.
+
+O modelo \textit{Random Forest} surge como uma das técnicas mais utilizadas
+em estudos de segurança de voo. Ele combina diversas árvores independentes,
+treinadas sobre subconjuntos aleatórios dos dados, de modo que a predição final
+resulta da agregação das decisões individuais. Esse mecanismo reduz a
+variabilidade do modelo, minimiza \textit{overfitting} e oferece excelente
+desempenho com dados heterogêneos e ruidosos --- condições típicas de registros
+operacionais aeronáuticos. Por essas razões, \textit{Random Forest} aparece com
+destaque em trabalhos como \citeonline{WALDEN2023} e é citado como uma solução
+relevante também na revisão sistemática de \citeonline{DEMIR2024}.
+
+Outro modelo central na literatura analisada é o XGBoost (\textit{Extreme
+Gradient Boosting}), um dos algoritmos mais eficazes para dados tabulares
+estruturados. O XGBoost constrói sequências de árvores onde cada nova árvore
+busca corrigir erros das anteriores por meio da otimização de gradiente, alcançando
+alto desempenho mesmo em conjuntos de dados desbalanceados. Sua capacidade
+de capturar interações complexas entre variáveis, aliada à relativa interpretabilidade
+dos seus parâmetros, fez com que este modelo fosse adotado no estudo de
+\citeonline{WALDEN2023} para modernizar o processo de avaliação de risco pré-voo.
+No contexto deste trabalho, ele se destaca como um dos principais candidatos a
+integrar o sistema proposto.
+
+Para o tratamento de dados meteorológicos, que possuem comportamento
+contínuo, alta variabilidade e forte correlação interna, outro modelo que se destaca
+é o \textit{Support Vector Machine} (SVM). O SVM trabalha identificando o
+hiperplano com maior margem de separação entre classes, o que o torna
+especialmente eficiente na categorização de condições atmosféricas complexas.
+\citeonline{LIU2024} aplicou o método com sucesso para prever fenômenos que
+impactam a segurança de voo, demonstrando sua capacidade de antecipar
+condições adversas com alta precisão. Assim, o SVM torna-se particularmente
+valioso sempre que a análise envolve múltiplas variáveis climáticas, como vento,
+temperatura, pressão atmosférica ou umidade.
+
+Além desses modelos, as Redes Neurais Artificiais (ANN) representam outra
+abordagem amplamente empregada em contextos onde a complexidade dos padrões
+exige maior capacidade de generalização. Estruturadas em camadas de neurônios
+artificiais interconectados que aplicam funções não lineares às entradas, as ANNs
+conseguem capturar relacionamentos sutis e frequentemente não lineares entre as
+variáveis. Na aviação, \citeonline{HARMS2020} utilizou redes neurais para prever
+eventos de aproximação instável, demonstrando que esses modelos são eficazes
+para identificar padrões complexos associados a eventos de risco.
+
+De forma complementar, técnicas de Processamento de Linguagem Natural
+(NLP) e modelos de linguagem, como o BERT, também aparecem na literatura,
+especialmente em análises que envolvem relatórios narrativos de incidentes.
+\citeonline{WALDEN2023}, por exemplo, aplicaram BERT para extrair informações
+semânticas de textos não estruturados, permitindo identificar expressões e termos
+associados a situações de risco. Embora tais modelos não sejam necessariamente
+centrais para todos os sistemas, eles ampliam a capacidade de incorporar fontes de
+dados textuais, fortalecendo a abordagem de gestão de segurança orientada a
+dados.
+
+A partir do conjunto de evidências analisado, percebe-se que a escolha dos
+modelos deve considerar tanto as características dos dados disponíveis quanto os
+objetivos específicos da análise. Nesse sentido, e alinhado ao propósito deste
+trabalho, os modelos que se mostram mais adequados ao desenvolvimento de um
+sistema inteligente de apoio à decisão pré-voo são aqueles capazes de lidar com
+dados tabulares complexos, prever categorias de risco e operar com robustez em
+cenários de variáveis heterogêneas. Assim, com base na literatura, o sistema
+proposto neste trabalho adotará XGBoost, Random Forest e \textit{Support Vector
+Machines} como modelos preditivos principais, dada sua adequação às tarefas de
+previsão de risco pré-voo.
+
+\subsubsection{Aplicações da IA na segurança aeronáutica e limitações
+identificadas pela literatura}
+
+A literatura recente revela que a Inteligência Artificial tem desempenhado
+papéis diversos e complementares na segurança aeronáutica, envolvendo desde a
+previsão de eventos operacionais até o suporte ao processo decisório pré-voo. Cada
+estudo analisado contribui para compreender como diferentes técnicas de
+Aprendizado de Máquina podem ser aplicadas a aspectos específicos das operações
+aéreas, mas também evidencia limitações estruturais que ainda impedem a formação
+de sistemas verdadeiramente integrados e abrangentes.
+
+No âmbito da análise de dados de voo e identificação de precursores,
+\citeonline{HARMS2020} demonstra que técnicas supervisionadas, incluindo redes
+neurais, são capazes de prever eventos de segurança com base em variáveis
+indiretas e em padrões complexos presentes nos dados operacionais. O autor
+também destaca que a eficácia desses modelos depende fortemente da
+disponibilidade e qualidade dos dados históricos, especialmente porque eventos
+negativos são raros e dificultam o treinamento de modelos supervisionados robustos.
+Esse aspecto evidencia um dos principais desafios da área: a escassez de
+ocorrências críticas em bases de dados suficientemente extensas.
+
+No campo da avaliação pré-voo, \citeonline{WALDEN2023} evidenciam que
+modelos como XGBoost, Random Forest, redes neurais e BERT melhoram a
+consistência e precisão do processo, superando limitações do FRAT tradicional.
+Ainda assim, os autores observam que ferramentas atuais geralmente não integram
+dados meteorológicos, operacionais e históricos de maneira conjunta, restringindo a
+abrangência da análise.
+
+Em relação às condições meteorológicas, \citeonline{LIU2024} mostra que o
+\textit{Support Vector Machine} apresenta alta precisão para prever fenômenos
+climáticos adversos. Contudo, seu desempenho pode ser limitado por ruído nos
+dados e pela variabilidade regional, indicando que previsões meteorológicas
+isoladas não são suficientes para avaliações mais completas de risco.
+
+A revisão sistemática de \citeonline{DEMIR2024} reforça esse cenário ao apontar
+que grande parte das pesquisas aplica IA a fatores isolados da operação aérea ---
+seja clima, manutenção ou dados de voo --- mas sem propor um modelo unificado.
+\citeonline{ZIEJA2015} complementam essa visão ao ressaltar a importância dos
+sistemas de informação para correlacionar incidentes, falhas técnicas e fatores
+humanos, mas destacam desafios relativos à padronização e integração de dados.
+
+Por fim, pesquisas como a de \citeonline{FELDMAN2023} mostram que sistemas
+inteligentes podem apresentar riscos em tempo real durante o planejamento pré-voo,
+enquanto \citeonline{ZIAKKAS2024} situam a IA como elemento essencial do
+paradigma \textit{Safety-II}. No entanto, ambos reforçam que a eficácia desses
+sistemas depende da integração de informações diversas e de interfaces claras, algo
+que ainda não é plenamente realizado nas ferramentas disponíveis.
+
+Embora a IA já tenha avançado em áreas específicas, como previsão
+meteorológica, avaliação pré-voo e detecção de eventos de segurança, a literatura
+indica que as soluções existentes permanecem segmentadas e apresentam
+limitações quanto à integração de dados, cobertura operacional e capacidade de
+generalização. Esses elementos mostram a principal lacuna a ser enfrentada e
+fundamentam a necessidade de sistemas mais abrangentes. Nesse contexto,
+insere-se a proposta deste trabalho: desenvolver um sistema inteligente capaz de
+integrar variáveis diversas --- como clima, características da aeronave, histórico
+operacional e condições da rota --- utilizando modelos de aprendizado de máquina
+para estimar o risco pré-voo de forma automatizada, consistente e orientada à
+tomada de decisão.
+
+%=======================================================================
+\section{Solução Proposta}
+%=======================================================================
+
+A solução proposta neste trabalho consiste no desenvolvimento de um
+sistema inteligente de apoio à tomada de decisão pré-voo, pensado para avaliar
+automaticamente o risco associado a uma operação aérea com base na integração
+de variáveis meteorológicas, características da aeronave, informações de rota e
+histórico operacional. A proposta surge diretamente da lacuna identificada na
+literatura, que demonstra avanços isolados em previsão meteorológica, detecção de
+eventos de segurança e avaliação de risco, mas destaca a ausência de uma
+ferramenta capaz de unificar múltiplas fontes de dados em um processo único,
+coerente e realmente representativo da complexidade operacional da aviação civil.
+Assim, o sistema aqui proposto busca superar essa fragmentação ao estruturar uma
+arquitetura capaz de reunir, tratar e analisar informações diversas, fornecendo ao
+operador um diagnóstico que apoia decisões críticas antes da decolagem.
+
+O sistema inicia pela recepção das informações essenciais ao planejamento
+pré-voo, como dados meteorológicos atuais e previstos, parâmetros operacionais da
+aeronave, estado de manutenção, condições da rota e registros históricos
+relevantes. Esses dados são integrados em um módulo central que organiza e
+harmoniza todas as variáveis, permitindo que diferentes tipos de informação ---
+numéricas, categóricas e contextuais --- sejam analisadas de maneira conjunta.
+Essa integração é um elemento central da proposta, pois possibilita que o
+diagnóstico de risco reflita simultaneamente múltiplos fatores que, na prática,
+influenciam a segurança do voo de forma combinada, e não isolada, como apontado
+pela literatura.
+
+O núcleo analítico do sistema é composto por quatro modelos de aprendizado
+de máquina selecionados com base na revisão teórica e na adequação às
+características dos dados aeronáuticos: XGBoost, Random Forest, \textit{Support
+Vector Machine} (SVM) e Redes Neurais Artificiais (ANN). Cada modelo desempenha
+um papel complementar dentro da solução. O XGBoost se destaca pela capacidade
+de lidar com grande número de variáveis e por sua elevada precisão em bases
+tabulares com interações complexas, características típicas de cenários de risco
+pré-voo. O \textit{Random Forest} contribui com robustez e estabilidade em dados
+heterogêneos, reduzindo \textit{overfitting} e oferecendo boa interpretabilidade
+operacional. O SVM é empregado principalmente nas variáveis de natureza
+meteorológica, pois apresenta excelente desempenho na separação de padrões
+climáticos potencialmente perigosos. Já as Redes Neurais se mostram adequadas
+para captar relações não lineares e precursores indiretos que não são facilmente
+representados por métodos baseados em árvores ou separadores lineares. Ao
+combinar esses modelos, o sistema se beneficia de abordagens distintas e
+complementares, criando uma estrutura analítica mais abrangente e sensível às
+múltiplas dimensões do risco aeronáutico.
+
+Após o processamento pelos modelos, o sistema reúne os resultados
+preditivos e gera uma classificação automática de risco pré-voo, que pode ser
+representada em categorias como ``Apto'', ``Moderado'' ou ``Não Apto''. Essa
+classificação final é derivada da integração das informações fornecidas pelos
+modelos e do conjunto de variáveis analisadas, refletindo a condição global da
+operação. O diagnóstico é então apresentado ao usuário --- seja piloto, despachante
+operacional ou gestor de segurança --- de maneira clara, direta e interpretável,
+permitindo rápida assimilação e facilitando a tomada de decisão. A solução,
+portanto, não substitui o julgamento humano, mas o complementa ao reduzir
+subjetividades, consolidar informações dispersas e antecipar riscos que poderiam
+passar despercebidos em avaliações manuais.
+
+Com essa arquitetura, o sistema proposto não apenas aponta as limitações
+observadas na literatura, mas introduz uma solução inovadora que aproxima a
+avaliação de risco pré-voo de uma abordagem sistêmica, abrangente e
+tecnologicamente atualizada. Dessa forma, o modelo proposto se posiciona como
+uma contribuição concreta à evolução das práticas de segurança na aviação civil,
+oferecendo uma ferramenta capaz de apoiar decisões críticas com maior precisão,
+consistência e respaldo analítico.
+
+%=======================================================================
+\section{Metodologia}
+%=======================================================================
+
+A metodologia adotada neste estudo será estruturada para desenvolver e
+validar um sistema inteligente de apoio à tomada de decisão pré-voo capaz de
+estimar automaticamente o risco operacional de uma aeronave. Trata-se de uma
+pesquisa aplicada, com abordagem quantitativa, por utilizar dados estruturados,
+métricas numéricas e experimentação computacional. Seu caráter também é
+exploratório e descritivo, ao investigar as possibilidades da Inteligência Artificial na
+segurança de voo, e experimental, por envolver o desenvolvimento e teste de um
+protótipo funcional.
+
+A construção do sistema baseará em dados históricos, simulados e adaptados
+de fontes consolidadas. Serão utilizados registros públicos nacionais, como dados
+do Instituto Nacional de Meteorologia (INMET) \cite{INMET2024}, além de diretrizes e
+normativas emitidas pela Agência Nacional de Aviação Civil (ANAC) \cite{ANAC2024},
+autoridade responsável pela regulamentação do setor no Brasil. As orientações da
+agência, especialmente no que se refere ao Gerenciamento da Segurança
+Operacional (SGSO) e aos requisitos aplicáveis à avaliação de risco, servirão como
+referência para a definição das categorias e parâmetros considerados no sistema.
+Para suprir lacunas e ampliar a diversidade de cenários, dados simulados serão
+adicionados, garantindo representatividade para condições críticas, rotas específicas,
+variações climáticas e diferentes perfis de aeronaves. O conjunto final incluirá
+variáveis relacionadas a clima, rota, tipo de aeronave, histórico operacional, estado
+de manutenção e categoria de risco associada ao evento.
+
+O núcleo analítico do estudo constituirá na modelagem preditiva com quatro
+algoritmos selecionados: \textit{Random Forest}, XGBoost, \textit{Support Vector
+Machine} (SVM) e Redes Neurais Artificiais (ANN). Esses modelos foram escolhidos
+devido à sua relevância na literatura e adequação ao tipo de dados utilizado.
+
+Os módulos do sistema serão integrados de forma a permitir que os dados de
+entrada sejam processados pelos modelos preditivos e resultem em uma
+classificação automática do risco pré-voo, categorizada em níveis como ``Apto'',
+``Moderado'' ou ``Não Apto''. O desenvolvimento será realizado em Python,
+utilizando bibliotecas como Pandas, NumPy, Scikit-learn e TensorFlow, com apoio
+de ferramentas de prototipagem para visualização e interface.
+
+A validação do sistema ocorrerá por meio de simulações que envolveram
+diferentes cenários operacionais, especialmente condições meteorológicas adversas,
+falhas de manutenção e rotas críticas.
+
+%=======================================================================
+\section{Considerações Finais}
+%=======================================================================
+
+% TODO: preencher considerações finais com resultados e conclusões do TCC II
+
+\bibliography{artigo_v2}
+
+\end{document}
