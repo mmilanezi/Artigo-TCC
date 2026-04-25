@@ -54,21 +54,21 @@ E-mail: rafaelkunst@unisinos.br}}
 
 %=======================================================================
 \begin{abstract}
-A segurança operacional na aviação civil enfrenta um paradoxo crescente: à medida
-que os índices de acidentes diminuem, torna-se mais difícil identificar riscos latentes
+A segurança operacional na aviação civil enfrenta um desafio crescente: à medida
+que os índices de acidentes diminuem, torna-se mais difícil identificar riscos ocultos
 antes que se materializem em eventos adversos. Este trabalho apresenta o
 desenvolvimento de um Sistema Inteligente de Apoio à Decisão Pré-Voo que combina
 dados históricos de ocorrências da aviação civil brasileira (CENIPA, 2007--2025),
 variáveis meteorológicas obtidas do INMET e da API Open-Meteo, além de
 características da aeronave e do itinerário, para classificar automaticamente o risco
 de cada etapa de um voo. O modelo preditivo é baseado em um Stacking Ensemble
-composto por quatro algoritmos de aprendizado de máquina supervisionado ---
-Random Forest, XGBoost, SVM-RBF e Perceptron Multicamadas (MLP) ---
+composto por quatro algoritmos de aprendizado de máquina supervisionado,
+Random Forest, XGBoost, SVM-RBF e Perceptron Multicamadas (MLP),
 combinados por uma Regressão Logística Multinomial como meta-aprendiz. O
 balanceamento de classes foi realizado via SMOTE e a geração de dados sintéticos
 para representar voos normais, enquanto a validação empregou predições
 \textit{out-of-fold} com validação cruzada de 5 partições. O modelo alcançou
-acurácia de 88,03\%, F1-Score Macro de 0,7414 e ROC-AUC de 0,9516 no conjunto
+acurácia de 87,54\%, F1-Score Macro de 74,28\% e ROC-AUC de 95,07\% no conjunto
 de teste, classificando operações aéreas em quatro categorias: Apto Seguro,
 Apto Requer Atenção, Não Apto e Inconclusivo. O sistema integra uma interface web com
 consulta meteorológica em tempo real, \textit{overrides} automáticos de segurança
@@ -82,19 +82,19 @@ Análise pré-voo. Stacking Ensemble. Inteligência artificial.}
 \begin{otherlanguage}{english}
 \singlespacing
 \begin{abstract}
-Civil aviation operational safety faces a growing paradox: as accident rates decline,
+Civil aviation operational safety faces a growing challenge: as accident rates decline,
 identifying latent risks before they materialize into adverse events becomes
 increasingly difficult. This paper presents the development of an Intelligent Pre-Flight
 Decision Support System that combines historical records of Brazilian civil aviation
 occurrences (CENIPA, 2007--2025), meteorological data from INMET and the
 Open-Meteo API, and aircraft and itinerary characteristics to automatically classify the
 risk of each flight segment. The predictive model is based on a Stacking Ensemble of
-four supervised machine learning algorithms --- Random Forest, XGBoost, SVM-RBF,
-and Multilayer Perceptron (MLP) --- combined by a Multinomial Logistic Regression
+four supervised machine learning algorithms , Random Forest, XGBoost, SVM-RBF,
+and Multilayer Perceptron (MLP) , combined by a Multinomial Logistic Regression
 meta-learner. Class balancing was performed via SMOTE and synthetic data generation
 for normal flight representation, while validation employed out-of-fold predictions with
-5-fold cross-validation. The model achieved 88.03\% accuracy, 0.7414 F1 Macro Score,
-and 0.9516 ROC-AUC on the test set, classifying flight operations into four
+5-fold cross-validation. The model achieved 87.54\% accuracy, 74.28\% F1 Macro Score,
+and 95.07\% ROC-AUC on the test set, classifying flight operations into four
 operational categories: Safe, Requires Attention, Not Apt, and Inconclusive. The system integrates a web
 interface with real-time meteorological queries, automatic safety overrides, and PDF
 report generation, constituting a practical tool aligned with the Safety-II paradigm for
@@ -133,36 +133,30 @@ sistemática de \citeonline{DEMIR2024}, abrangendo 224 estudos publicados entre
 2004 e 2024, evidencia crescimento expressivo na aplicação de ML, aprendizado
 profundo e modelos de séries temporais à análise de acidentes, previsão de eventos
 de risco e melhoria das medidas de segurança. Entretanto, cada estudo tende a
-abordar apenas um aspecto isolado da operação --- seja clima, manutenção ou dados
-históricos --- sem propor uma estrutura verdadeiramente integrada. Nesse cenário,
+abordar apenas um aspecto isolado da operação, seja clima, manutenção ou dados
+históricos , sem propor uma estrutura verdadeiramente integrada. Nesse cenário,
 \citeonline{ZIAKKAS2024} situam a IA como elemento central na transição do
-paradigma \textit{Safety-I} --- reativo, centrado na investigação de falhas --- para o
+paradigma \textit{Safety-I} , reativo, centrado na investigação de falhas , para o
 \textit{Safety-II}, que busca compreender por que operações dão certo,
 fortalecendo a resiliência sistêmica.
 
 Diante desse panorama, identificou-se uma lacuna relevante: a ausência de
-ferramentas que consolidem múltiplas dimensões do risco pré-voo --- meteorológica,
-operacional, histórica e de rota --- em uma única análise automatizada. Este trabalho
+ferramentas que consolidem múltiplas dimensões do risco pré-voo , meteorológica,
+operacional, histórica e de rota , em uma única análise automatizada. Este trabalho
 descreve o desenvolvimento e a avaliação de um sistema inteligente de apoio à
 tomada de decisão pré-voo, que combina dados históricos do CENIPA
 \cite{CENIPA2024}, variáveis meteorológicas reais e características da aeronave e
 do itinerário para estimar automaticamente o nível de risco associado a cada ponto
 de uma operação aérea, utilizando um modelo de Stacking Ensemble supervisionado.
 
-O sistema desenvolvido alcançou acurácia de 88,03\%, F1-Score Macro de 0,7414
-e ROC-AUC de 0,9516, classificando operações aéreas em quatro categorias
+O sistema desenvolvido alcançou acurácia de 87,54\%, F1-Score Macro de 0,7428
+e ROC-AUC de 0,9507, classificando operações aéreas em quatro categorias
 operacionais. Além do modelo preditivo, foi implementada uma interface web com
 consulta meteorológica em tempo real, lógica de \textit{overrides} de segurança e
 geração de relatório técnico em PDF. O trabalho busca, assim, contribuir para a
 evolução das práticas de segurança operacional na aviação civil brasileira, oferecendo
 uma abordagem integrada, orientada por dados e alinhada ao paradigma
 \textit{Safety-II}.
-
-Este artigo está organizado da seguinte forma: a Seção~2 apresenta a
-fundamentação teórica sobre segurança operacional, avaliação de risco pré-voo e
-as técnicas de aprendizado de máquina empregadas; a Seção~3 descreve o
-desenvolvimento do sistema; a Seção~4 detalha a metodologia adotada; a
-Seção~5 apresenta e discute os resultados obtidos; e a Seção~6 traz as conclusões.
 
 %=======================================================================
 \section{Fundamentação Teórica}
@@ -240,8 +234,8 @@ perfil da missão.
 Como apresentado por \citeonline{WALDEN2023}, durante o planejamento pré-voo
 o piloto deve considerar múltiplos elementos antes de decidir se irá voar, devendo
 analisar utilizando ferramentas como o FRAT. Essa análise sistemática também é
-reforçada por \textit{checklists} como o PAVE --- acrônimo de \textit{Pilot,
-Aircraft, enVironment} e \textit{External Pressures} --- que orienta o piloto a avaliar
+reforçada por \textit{checklists} como o PAVE , acrônimo de \textit{Pilot,
+Aircraft, enVironment} e \textit{External Pressures} , que orienta o piloto a avaliar
 os principais itens de risco.
 
 Apesar de amplamente utilizados, estudos recentes apontam limitações
@@ -283,7 +277,7 @@ destacam que a análise sistemática de conjuntos massivos de dados permite
 identificar padrões de risco, detectar anomalias operacionais e aprimorar a
 capacidade preditiva dos modelos de segurança. \citeonline{ZIEJA2015} reforçam o
 papel dos sistemas de informação na identificação de relações entre variáveis
-críticas --- falhas técnicas, fatores humanos e condições operacionais --- orientando
+críticas , falhas técnicas, fatores humanos e condições operacionais , orientando
 decisões mais precisas por meio de análise de padrões recorrentes e possíveis
 relações causais.
 
@@ -334,7 +328,7 @@ Dentro do campo do ML, o aprendizado supervisionado é a categoria que mais
 se destaca nas aplicações aeronáuticas. Segundo \citeonline{MITCHELL1997}, um
 programa aprende a partir de uma experiência de treino com respeito a uma tarefa e
 uma medida de desempenho se seu desempenho na tarefa, medido por essa métrica,
-melhora com a experiência fornecida --- definição que captura o processo pelo qual
+melhora com a experiência fornecida , definição que captura o processo pelo qual
 os modelos preditivos aprendem a estimar o risco de voo a partir de ocorrências
 históricas rotuladas. \citeonline{KUHL2022} complementam que esses modelos
 ``aprendem'' relações internas nos dados e ajustam seu comportamento com base
@@ -362,7 +356,7 @@ constrói uma coleção de árvores descorrelacionadas e combina suas prediçõe
 voto majoritário, atingindo desempenho comparável ao \textit{boosting} com menor
 custo de ajuste. \citeonline{GERON2019} complementa que o algoritmo introduz
 aleatoriedade adicional na seleção de variáveis em cada nó da árvore, reduzindo a
-variância sem aumentar proporcionalmente o viés --- propriedade especialmente
+variância sem aumentar proporcionalmente o viés , propriedade especialmente
 valiosa em dados aeronáuticos heterogêneos e ruidosos. \citeonline{WALDEN2023}
 confirmam sua eficácia no contexto aeronáutico, apontando o Random Forest como
 um dos dois modelos de melhor desempenho dentre XGBoost, RF, redes neurais e
@@ -389,7 +383,7 @@ SVM-RBF atua como um dos preditores base do ensemble, processando as variáveis
 meteorológicas e operacionais do itinerário. A eficácia do SVM em contextos
 aeronáuticos com variáveis similares é evidenciada por \citeonline{LIU2024}, que
 aplicaram SVM-RBF para a tarefa específica de previsão de condições meteorológicas
-perigosas --- tempestades, turbulência e baixa visibilidade --- obtendo desempenho
+perigosas , tempestades, turbulência e baixa visibilidade , obtendo desempenho
 superior ao de Random Forest e LSTM em acurácia, ROC-AUC e F1-score.
 
 O quarto modelo base é o \textbf{Perceptron Multicamadas} (MLP), uma rede neural
@@ -410,8 +404,8 @@ A combinação dos quatro modelos base foi realizada pela técnica de
 \textbf{Stacking Generalizado}, proposta originalmente por \citeonline{WOLPERT1992}.
 O Stacking é uma abordagem de combinação de modelos (\textit{ensemble}) em que,
 ao invés de se escolher um único melhor modelo ou combinar predições por média
-simples, os modelos base --- chamados de \textit{nível 0} ou \textit{base
-learners} --- são treinados de forma independente e suas predições são utilizadas
+simples, os modelos base , chamados de \textit{nível 0} ou \textit{base
+learners} , são treinados de forma independente e suas predições são utilizadas
 como entrada de um novo modelo, o meta-aprendiz de \textit{nível 1}, que aprende
 qual combinação entre eles produz o melhor resultado global.
 \citeonline{HASTIE2009} formalizam que a combinação de modelos nunca piora o
@@ -452,7 +446,7 @@ estruturais que ainda impedem a formação de sistemas verdadeiramente integrado
 \citeonline{HARMS2020} demonstra que técnicas supervisionadas são capazes de
 prever eventos de segurança com base em variáveis indiretas, mas destaca que a
 eficácia dos modelos depende fortemente da disponibilidade de dados históricos,
-especialmente porque eventos negativos são raros --- desafio que o presente
+especialmente porque eventos negativos são raros , desafio que o presente
 trabalho aborda por meio da geração de dados sintéticos e do balanceamento via
 SMOTE.
 
@@ -466,7 +460,7 @@ modelo unificado.
 
 Por fim, \citeonline{ZIAKKAS2024} situam a IA como elemento essencial do
 paradigma \textit{Safety-II}, mas reforçam que a eficácia desses sistemas depende
-da integração de informações diversas e de interfaces claras --- algo que o presente
+da integração de informações diversas e de interfaces claras , algo que o presente
 trabalho buscou concretizar ao reunir dados de múltiplas fontes em um único
 sistema funcional voltado ao operador aéreo.
 
@@ -547,9 +541,9 @@ categorias), taxonomia ICAO principal e unidade federativa (UF) de origem do voo
 
 \subsection{Arquitetura do modelo ensemble}
 
-O modelo preditivo é um Stacking Ensemble composto por quatro algoritmos base ---
+O modelo preditivo é um Stacking Ensemble composto por quatro algoritmos base ,
 Random Forest (100 árvores), XGBoost (300 estimadores, \texttt{max\_depth=6}),
-SVM-RBF e MLP (uma camada oculta, otimizador Adam) --- combinados por
+SVM-RBF e MLP (uma camada oculta, otimizador Adam) , combinados por
 Regressão Logística Multinomial como meta-aprendiz. A seleção de quatro modelos
 de naturezas distintas é motivada pela diversidade dos mecanismos de aprendizado:
 métodos de ensemble de árvores (RF e XGBoost), separação por hiperplano no
@@ -559,7 +553,7 @@ históricos sejam capturados de forma complementar.
 
 \subsection{Lógica de status e overrides de segurança}
 
-A saída do modelo --- quatro classes com probabilidades associadas --- é convertida
+A saída do modelo , quatro classes com probabilidades associadas , é convertida
 em quatro status operacionais apresentados ao usuário, conforme o
 Quadro~\ref{quad:status}.
 
@@ -584,8 +578,8 @@ Em adição ao modelo preditivo, o sistema incorpora uma \textbf{camada de valid
 de segurança} baseada em regras operacionais derivadas de normativos aeronáuticos
 internacionais, aplicada sobre a saída do classificador antes da geração do relatório.
 \citeonline{KIRWAN2024} fundamenta essa exigência ao introduzir o conceito de
-\textit{golden rules} --- limites operacionais que sistemas de IA em aviação não devem
-violar independentemente de sua lógica interna ---, tornando indispensável a existência
+\textit{golden rules} , limites operacionais que sistemas de IA em aviação não devem
+violar independentemente de sua lógica interna ,, tornando indispensável a existência
 de restrições externas que delimitem o espaço de ação do classificador em contextos
 de risco real.
 
@@ -602,7 +596,7 @@ tropical, ICAO Annex 3 Apêndice 2 §5.1.1 \cite{ICAO2018}), rajada acima de 25 
 precipitação acima de 7,5 mm/h, umidade acima de 95\%, ou temperatura abaixo de 0°C
 com gelo confirmado (RBAC 121 Emenda 07 Art.~121.629(b) \cite{RBAC121}).
 Adicionalmente, a camada emite \textbf{Inconclusivo} quando detecta contradição entre
-a predição e as condições observadas --- situação em que o classificador prediz acidente
+a predição e as condições observadas , situação em que o classificador prediz acidente
 com alta confiança em cenário meteorologicamente benigno. O
 Quadro~\ref{quad:overrides} sintetiza os limiares de cada nível.
 
@@ -633,9 +627,9 @@ Quadro~\ref{quad:overrides} sintetiza os limiares de cada nível.
 Essa arquitetura de dois níveis independentes é coerente com o \textit{framework} de
 Sistemas de Gerenciamento de Segurança (SMS) promovido pela ICAO, que preconiza
 múltiplos mecanismos de mitigação de risco independentes e complementares
-\cite{ZIAKKAS2024,KIRWAN2024}: o modelo estatístico constitui a primeira barreira ---
-avaliação probabilística baseada em padrões históricos do CENIPA ---; a camada de
-validação operacional constitui a segunda barreira --- conformidade determinística com
+\cite{ZIAKKAS2024,KIRWAN2024}: o modelo estatístico constitui a primeira barreira ,
+avaliação probabilística baseada em padrões históricos do CENIPA ,; a camada de
+validação operacional constitui a segunda barreira , conformidade determinística com
 limites físicos normativos internacionais.
 
 \subsection{Interface web e relatório}
@@ -645,8 +639,8 @@ acessível via navegador na porta 7550. O formulário de entrada coleta dados da
 aeronave (matrícula, tipo de motor, PMD, ano, assentos), do itinerário (cidade e UF
 de origem e destino, data, hora e duração do voo) e permite adicionar escalas
 intermediárias. Ao submeter, o sistema consulta automaticamente os dados
-meteorológicos --- INMET histórico para datas passadas e API Open-Meteo para
-previsões de até 15 dias --- constrói o vetor de \textit{features} por ponto do
+meteorológicos , INMET histórico para datas passadas e API Open-Meteo para
+previsões de até 15 dias , constrói o vetor de \textit{features} por ponto do
 itinerário, executa a inferência e exibe o resultado com código visual de cores e
 recomendações textuais. Opcionalmente, o piloto pode gerar e baixar um relatório
 técnico em PDF, contendo status geral, análise por ponto do itinerário, dados da
@@ -656,8 +650,8 @@ aeronave e diagnóstico do modelo.
 \section{Metodologia}
 %=======================================================================
 
-Esta pesquisa é de natureza aplicada, com abordagem quantitativa --- por utilizar
-dados estruturados, métricas numéricas e experimentação computacional --- e
+Esta pesquisa é de natureza aplicada, com abordagem quantitativa , por utilizar
+dados estruturados, métricas numéricas e experimentação computacional , e
 caráter exploratório, descritivo e experimental, ao investigar e testar técnicas de
 Inteligência Artificial para o problema de segurança de voo.
 
@@ -669,14 +663,14 @@ incidentes da aviação civil brasileira entre 2006 e 2023. Cada ocorrência foi
 rotulada em quatro classes de acordo com a gravidade do evento:
 
 \begin{itemize}
-  \item \textbf{Classe 3 --- Acidente:} dano destruído com fatalidades;
-  \item \textbf{Classe 2 --- Incidente Grave:} dano substancial sem fatalidades;
-  \item \textbf{Classe 1 --- Incidente:} dano leve ou nenhum dano.
+  \item \textbf{Classe 3 , Acidente:} dano destruído com fatalidades;
+  \item \textbf{Classe 2 , Incidente Grave:} dano substancial sem fatalidades;
+  \item \textbf{Classe 1 , Incidente:} dano leve ou nenhum dano.
 \end{itemize}
 
 Uma limitação estrutural do banco CENIPA é que ele registra apenas ocorrências,
 não contendo voos normais. Para que o modelo aprendesse a distinguir o que é
-seguro do que é perigoso, foi introduzida a \textbf{Classe 0 --- Voo Normal},
+seguro do que é perigoso, foi introduzida a \textbf{Classe 0 , Voo Normal},
 representada por 5.000 amostras sintéticas geradas com perfis realistas de
 aeronaves e distribuições meteorológicas dentro de faixas seguras (baixo vento,
 ausência de precipitação, temperatura e umidade normais), com distribuição de
@@ -692,7 +686,7 @@ o \textit{lookup} por cidade e UF.
 \subsection{Pré-processamento e balanceamento de classes}
 
 As \textit{features} numéricas foram padronizadas pelo \textbf{StandardScaler}
---- que transforma cada variável para média zero e desvio padrão unitário ---
+, que transforma cada variável para média zero e desvio padrão unitário ,
 prática explicitamente recomendada por \citeonline{HASTIE2009} antes do treinamento
 de redes neurais e SVMs, para que a escala das variáveis não influencie
 artificialmente o aprendizado. As \textit{features} categóricas foram transformadas
@@ -740,7 +734,7 @@ A avaliação do modelo foi conduzida por meio de três métricas principais.
 
 A \textbf{Acurácia} expressa a proporção de previsões corretas sobre o total de
 instâncias avaliadas. Contudo, conforme demonstrado por \citeonline{LIU2024} e
-\citeonline{HARMS2020}, ela pode ser enganosa em conjuntos desbalanceados ---
+\citeonline{HARMS2020}, ela pode ser enganosa em conjuntos desbalanceados ,
 onde um classificador trivial que prevê sempre a classe majoritária obteria valores
 elevados sem qualquer capacidade preditiva real sobre as classes raras.
 
@@ -753,7 +747,7 @@ métricas sensíveis ao desequilíbrio, como a acurácia isolada, são insuficie
 cenários com distribuição assimétrica. O F1 Macro foi adotado como \textbf{critério
 primário de seleção} do modelo final.
 
-O \textbf{ROC-AUC} (\textit{Receiver Operating Characteristic --- Area Under the
+O \textbf{ROC-AUC} (\textit{Receiver Operating Characteristic , Area Under the
 Curve}) resume a capacidade discriminativa do classificador em todos os limiares de
 decisão possíveis em um único escalar entre 0,5 (desempenho aleatório) e 1,0
 (classificador perfeito). \citeonline{FAWCETT2006} demonstra que o AUC equivale à
@@ -799,10 +793,10 @@ antes da aplicação do SMOTE e não utilizadas em nenhuma etapa do treinamento.
     \toprule
     \textbf{Métrica} & \textbf{Valor} \\
     \midrule
-    Acurácia              & 88,03\%   \\
-    F1-Score Macro        & 0,7414    \\
-    ROC-AUC               & 0,9516    \\
-    Score Composto        & 0,8247    \\
+    Acurácia              & 87,54\%   \\
+    F1-Score Macro        & 0,7428    \\
+    ROC-AUC               & 0,9507    \\
+    Score Composto        & 0,8224    \\
     Tempo de treinamento  & $\approx$18 min (1.082 s) \\
     \bottomrule
   \end{tabular}
@@ -855,15 +849,15 @@ assimetria de desempenho estrutural do modelo.
 
 \subsection{Análise dos resultados}
 
-A acurácia de 88,03\% indica que o ensemble classifica corretamente a grande
+A acurácia de 87,54\% indica que o ensemble classifica corretamente a grande
 maioria das operações avaliadas. Entretanto, dado o desbalanceamento da
-Classe 2, a métrica mais relevante para análise é o F1-Score Macro de 0,7414, que
+Classe 2, a métrica mais relevante para análise é o F1-Score Macro de 0,7428, que
 reflete desempenho médio equalizado entre todas as classes. Esse valor indica que
 o modelo possui boa capacidade preditiva global, mas enfrenta o desafio estrutural
 de que eventos de Incidente Grave são numericamente raros e difíceis de capturar
 com alta revocação, mesmo após a aplicação do SMOTE.
 
-O ROC-AUC de 0,9516 é o resultado mais expressivo: ele indica que, em 95,16\%
+O ROC-AUC de 0,9507 é o resultado mais expressivo: ele indica que, em 95,07\%
 dos casos, o modelo atribui probabilidade de risco mais alta a uma operação
 perigosa do que a uma operação normal escolhidas aleatoriamente, conforme a
 interpretação de \citeonline{FAWCETT2006}. Esse valor está acima dos reportados
@@ -875,7 +869,7 @@ de um problema de quatro classes com dados históricos exclusivamente brasileiro
 
 Uma contribuição metodológica do trabalho é a comparação entre o Stacking
 Ensemble e os modelos base individuais na fase de seleção: o score composto de
-0,8247 do ensemble superou todos os modelos treinados isoladamente, corroborando
+0,8224 do ensemble superou todos os modelos treinados isoladamente, corroborando
 a fundamentação teórica de \citeonline{HASTIE2009} de que a combinação de modelos
 não piora o desempenho esperado e, em geral, melhora a generalização ao capturar
 perspectivas complementares sobre os dados.
@@ -896,15 +890,15 @@ aviação, enquanto \citeonline{WALDEN2023} relatam acurácias entre 0,83 e 0,91
 classificação de risco pré-voo com FRATs baseados em ML. O presente trabalho
 diferencia-se por três aspectos: (i)~a extensão para quatro classes de gravidade
 alinhadas à taxonomia CENIPA; (ii)~a integração de \textit{features} meteorológicas
---- cujas importâncias no Random Forest (vento: 0,037; umidade: 0,029; rajada: 0,024;
+, cujas importâncias no Random Forest (vento: 0,037; umidade: 0,029; rajada: 0,024;
 pressão: 0,027) validam empiricamente a relevância meteorológica para predição de
 gravidade; e (iii)~a presença da camada de validação de segurança de dois níveis,
 baseada em limiares operacionais normativos.
 
 A presença dos \textit{overrides} de segurança meteorológica garante que, mesmo
 em cenários onde o modelo preditivo apresente incerteza, condições atmosféricas
-críticas --- como vento superior a 17 m/s (L2) ou temperatura abaixo de 0°C com gelo
-confirmado (RBAC 121 Art.~121.629(b) \cite{RBAC121}) --- resultem em classificação
+críticas , como vento superior a 17 m/s (L2) ou temperatura abaixo de 0°C com gelo
+confirmado (RBAC 121 Art.~121.629(b) \cite{RBAC121}) , resultem em classificação
 automática como Não Apto. Essa combinação de modelo de ML com regras determinísticas
 de segurança alinha-se ao princípio \textit{Safety-II} de que o sistema deve ser
 resiliente mesmo diante de incertezas do componente preditivo, conforme discutido por
@@ -921,8 +915,8 @@ Open-Meteo e características da aeronave e do itinerário, utilizando um Stacki
 Ensemble com quatro modelos base (Random Forest, XGBoost, SVM-RBF e MLP)
 combinados por Regressão Logística Multinomial como meta-aprendiz.
 
-Os resultados obtidos --- acurácia de 88,03\%, F1-Score Macro de 0,7414 e
-ROC-AUC de 0,9516 --- demonstram que o ensemble é capaz de classificar
+Os resultados obtidos , acurácia de 87,54\%, F1-Score Macro de 0,7428 e
+ROC-AUC de 0,9507 , demonstram que o ensemble é capaz de classificar
 automaticamente o nível de risco de operações aéreas com desempenho competitivo
 em relação à literatura, especialmente em termos de capacidade discriminativa
 (ROC-AUC). A escolha do F1-Score Macro como critério primário de seleção mostrou-se
@@ -932,7 +926,7 @@ eventos de Incidente Grave são numericamente raros.
 Do ponto de vista prático, a integração do modelo preditivo com \textit{overrides}
 determinísticos de segurança meteorológica, consulta em tempo real ao INMET e
 Open-Meteo, e interface web com geração de relatório em PDF compõe uma
-ferramenta funcional que complementa --- sem substituir --- o julgamento do piloto,
+ferramenta funcional que complementa , sem substituir , o julgamento do piloto,
 alinhando-se ao paradigma \textit{Safety-II}. A solução representa uma contribuição
 concreta à modernização do processo de avaliação de risco pré-voo na aviação civil
 brasileira, superando as limitações dos FRATs tradicionais ao integrar múltiplas
