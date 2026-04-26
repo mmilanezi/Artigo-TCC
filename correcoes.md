@@ -233,3 +233,99 @@ cognitivos e cultura organizacional.
 
 
 No trecho acima não está faltando referência?
+
+---
+
+## ANÁLISE DAS CORREÇÕES — RESULTADOS E DÚVIDAS
+
+### Itens CORRIGIDOS no arquivo `artigo_v2/artigo_v2.tex`:
+
+- **Item 2** ✅ Corrigido: "2006–2023" → "2007–2025" em todos os trechos. Também corrigido `\cite{CENIPA2024}` → `\cite{CENIPA2025}` (a chave CENIPA2024 não existia no .bib).
+- **Item 4** ✅ Corrigido: RF agora correto com 300 árvores, pesos balanceados, profundidade irrestrita. MLP corrigido para duas camadas ocultas [128, 64], ativação ReLU, early stopping. Também corrigido na seção 2.2.2 (Fundamentação Teórica).
+- **Item 6** ✅ Corrigido: Ao introduzir a camada pela primeira vez, o texto agora diz "camada de *overrides* de segurança --- também denominada camada de validação de segurança". Terminologia unificada no Quadro e nas referências posteriores.
+- **Item 7** ✅ Corrigido: Citações agora no formato ABNT: "(RBAC 121, Emenda 07, Art. 121.429(a)) \cite{RBAC121}" e "(ICAO, Anexo 3, §4.4.2.3) \cite{ICAO2018,WMO2025}". Detalhamento normativo movido para o corpo do texto, fora dos parênteses da citação.
+- **Item 9** ✅ Corrigido: "preconiza" → "recomenda".
+- **Item 10** ✅ Corrigido: Todos os padrões " , texto , " (travessão incorreto como vírgula com espaço) substituídos por " --- texto ---". Também corrigidos espaços soltos antes de vírgulas em vários pontos.
+- **Item 11** ✅ Corrigido: Removida menção à porta 7550; "PMD" expandido para "Peso Máximo de Decolagem (PMD)"; "piloto" substituído por "usuário" na seção 3.4 e na conclusão.
+- **Item 12** ✅ Corrigido: INMET agora especificado como cobrindo "de 2000 a 31 de março de 2026". Adicionada informação de que datas posteriores a essa data usam a API Open-Meteo.
+- **Item 13** ✅ Corrigido: Adicionada nota de rodapé explicando *oversampling* (superamostragem).
+- **Item 15** ✅ Corrigido: Removidos "score composto" e "Fase 4 do pipeline". Seção reescrita com descrição mais clara do processo out-of-fold e validação cruzada. Critério de avaliação agora descrito como F1-Score Macro e ROC-AUC.
+- **Item 16** ✅ Corrigido: Linha "Score Composto" removida da tabela. Tempo de treinamento corrigido para ≈17 min (991 s).
+- **Item 17** ✅ Corrigido: Parágrafo reescrito. Removidas afirmações sobre "comparação/seleção" entre modelos e sobre "score composto". Novo texto fundamenta o uso do ensemble na teoria de Hastie et al. e na diversidade dos algoritmos.
+- **Item 19** ✅ Corrigido: Conclusão agora menciona "banco de dados histórico do INMET" e "API Open-Meteo em tempo real para datas futuras", diferenciando corretamente as duas fontes.
+- **Item 20** ✅ Corrigido: Adicionado parágrafo nos trabalhos futuros sobre o Data Flywheel (banco SQLite de análises) e retreinamento via metodologia de *self-training*.
+- **Item 22** ✅ Corrigido: Adicionadas imagens `Modelo ML.JPG` (seção 3.2), `Fase de dados.JPG` (seção 4.2) e `Interface web.png` (seção 3.4). As quatro figuras de status operacional (Exemplo_apto_seguro, etc.) foram movidas do apêndice para a seção 3.4. O apêndice foi atualizado para receber as fotos dos relatórios PDF (a serem inseridas pelo autor). **Atenção**: os arquivos `Modelo ML.JPG` e `Fase de dados.JPG` têm espaços no nome. Foi adicionado o pacote LaTeX `grffile` para lidar com isso. Se houver erro de compilação, renomeie os arquivos para `ModeloML.JPG` e `FaseDados.JPG` e atualize os `\includegraphics` correspondentes.
+
+---
+
+### Itens que PRECISAM DE SUA CONFIRMAÇÃO (dúvidas):
+
+**Item 1 — DÚVIDA: Coerência do trecho sobre dados sintéticos + SMOTE**
+
+Trecho: "eventos negativos são raros --- desafio que o presente trabalho aborda por meio da geração de dados sintéticos e do balanceamento via SMOTE."
+
+Análise: Os dados sintéticos foram gerados para a **Classe 0 (Voo Normal)** — não para as classes de eventos negativos. O SMOTE foi aplicado para balancear as classes de eventos (1, 2 e 3). Portanto, a "geração de dados sintéticos" corrige a ausência de voos normais no dataset, enquanto o SMOTE corrige o desequilíbrio entre as classes de eventos. O texto atual implica que ambos endereçam a raridade de eventos negativos, o que é tecnicamente impreciso. **Sugestão de reescrita**: "eventos negativos são raros --- desafio que o presente trabalho aborda por meio da introdução de uma classe de referência de voos normais (Classe 0) via geração sintética e do balanceamento das classes de eventos via SMOTE." **Confirmar se deseja aplicar esta correção.**
+
+Usuário: Confirmo a correção acima
+---
+
+**Item 3 — INFORMAÇÃO: O que é "[ht]"**
+
+O `[ht]` que aparece nos trechos LaTeX (ex: `\begin{quadro}[ht]`) é um **especificador de posicionamento de elementos flutuantes** do LaTeX: `h` = *here* (aqui, onde está no código), `t` = *top* (topo da página). Esse código **não aparece no PDF compilado** — é apenas uma instrução para o compilador sobre onde preferir colocar o quadro/tabela/figura. Nenhuma correção necessária.
+
+Usuário: O meu questionamento é exatamente por conta de que está aparecendo no PDF compilado. Poderia verificar e ajustar para não aparecer no PDF compilado?
+---
+
+**Item 5 — INFORMAÇÃO: Numeração dos quadros**
+
+A numeração "Quadro 3.1", "Quadro 3.2", "Quadro 3.3" é gerada **automaticamente pelo LaTeX** com base na ordem em que os quadros aparecem no documento e na seção em que estão. O valor correto será exibido no PDF compilado. Se a numeração estiver errada no PDF, verifique se algum `\begin{quadro}` foi inserido ou removido em uma ordem diferente.
+
+---
+
+**Item 8 — INFORMAÇÃO: Formatação de tabelas e quadros**
+
+O formato de cabeçalho dos quadros/tabelas (ex: "Quadro 1 – Nome da tabela") é controlado pelo arquivo de classe `UNISINOSartigo.cls`. Os comandos `\caption{}` e `\fonte{}` já estão sendo usados corretamente. O formato exato (uso de ":" ou "–", posição do número) dependerá da configuração do template. **Verifique no PDF compilado** se o formato está de acordo com as normas da UNISINOS. Se necessário, ajuste o arquivo `UNISINOSartigo.cls`.
+
+---
+
+**Item 14 — VERIFICAÇÃO: Cálculo dos 18.171 registros**
+
+O número 18.171 está **correto**. Demonstração:
+- Conjunto de treino (80%): Classe 0=4.000 + Classe 1=7.304 + Classe 2=994 + Classe 3=2.238 = **14.536** ✓
+- Conjunto de teste (20%): Classe 0=1.000 + Classe 1=1.827 + Classe 2=248 + Classe 3=560 = **3.635** ✓
+- Total: 14.536 + 3.635 = **18.171** ✓
+- Verificação: 18.171 × 0,80 = 14.536,8 ≈ 14.536 ✓ (arredondamento)
+
+O texto está correto. Nenhuma alteração necessária.
+
+---
+
+**Item 18 — DÚVIDA: Origem dos valores de importância de features do Random Forest**
+
+Trecho: "cujas importâncias no Random Forest (vento: 0,037; umidade: 0,029; rajada: 0,024; pressão: 0,027) validam empiricamente a relevância meteorológica"
+
+**De onde foram extraídos esses valores?** Se foram obtidos durante o treinamento do modelo (via `feature_importances_` do scikit-learn), eles são válidos e podem permanecer no texto. Nesse caso, seria útil mencionar a fonte explicitamente (ex: "conforme calculado pelo modelo Random Forest treinado"). Se foram copiados de outro lugar ou são estimativas, devem ser removidos ou substituídos pelos valores reais do modelo treinado. **Confirmar a origem desses valores.**
+
+---
+
+**Item 21 — AÇÃO NECESSÁRIA: Referências sem "acessado em"**
+
+Verificação do arquivo `.bib`: a maioria das referências com URL já possui `urlaccessdate`. A exceção é **WALDEN2023**, que não tem URL nem data de acesso (é um relatório de projeto de curso da George Mason University, possivelmente disponível online). **Ação necessária**: Se o relatório estiver disponível online, adicionar ao WALDEN2023 em `artigo_v2.bib`:
+```
+url = {URL_DO_DOCUMENTO},
+urlaccessdate = {XX mmm. 20XX}
+```
+Se não estiver disponível online, a referência está adequada como `@misc` sem URL.
+
+---
+
+**Item 23 — DÚVIDA: Referência faltando no parágrafo sobre 1950–1970**
+
+O parágrafo sobre a evolução histórica da segurança aeronáutica (anos 1950–1970, erro humano, etc.) não possui citação. Sugestões de referências que cobrem essa evolução histórica e já estão no arquivo .bib:
+- **HARMS2020** (Delft University): discute a trajetória histórica da segurança aeronáutica
+- **DEMIR2024**: revisão sistemática que inclui contexto histórico do desenvolvimento da área
+- **ZIAKKAS2024**: discute a transição Safety-I → Safety-II com contexto histórico
+
+**Sugestão**: adicionar `\cite{HARMS2020}` ao final do parágrafo, ou citar `\citeonline{DEMIR2024}` no início. **Confirmar qual referência cobrir essa afirmação.**
+
+Usuário: Acredito que Harms (2020) e Demir (2024) está mais adequado a utilização. Se você concordar, por favor revise a bibliografia e inclua sem alterar o texto, apenas ajustando onde se encaixa melhor a referência.
