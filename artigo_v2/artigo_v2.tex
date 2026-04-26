@@ -271,7 +271,11 @@ diagnósticos preditivos durante o planejamento, demonstrando que a automação
 aumenta a consciência situacional do operador.
 
 Outro aspecto crítico diz respeito à meteorologia. \citeonline{LIU2024} ressaltam que
-fenômenos como turbulência severa, \textit{windshear}, tempestades convectivas e
+fenômenos como turbulência severa, \textit{windshear}\footnote{\textit{Windshear}
+(cisalhamento de vento): variação abrupta da velocidade ou direção do vento em
+curta distância, representando um dos fenômenos meteorológicos de maior risco
+para a segurança de voo, especialmente nas fases de decolagem e pouso.},
+tempestades convectivas e
 baixa visibilidade impactam diretamente a segurança operacional, e que a melhoria
 da capacidade de alerta antecipado de tempo severo é uma das principais funções
 dos serviços de meteorologia aeronáutica. Essa compreensão reforça que muitos
@@ -363,9 +367,17 @@ algoritmos de naturezas distintas, escolha motivada pela necessidade de diversid
 entre os preditores, conforme preconizado por \citeonline{HASTIE2009}.
 
 O primeiro modelo base é o \textbf{Random Forest} (RF), descrito por
-\citeonline{HASTIE2009} como uma variação substancial do \textit{bagging} que
-constrói uma coleção de árvores descorrelacionadas e combina suas predições por
-voto majoritário, atingindo desempenho comparável ao \textit{boosting} com menor
+\citeonline{HASTIE2009} como uma variação substancial do
+\textit{bagging}\footnote{\textit{Bagging} (\textit{Bootstrap Aggregating}):
+técnica de ensemble que treina múltiplos modelos em subamostras aleatórias com
+reposição do conjunto de treinamento e combina suas predições por votação ou
+média, reduzindo a variância do modelo sem aumentar proporcionalmente o viés.}
+que constrói uma coleção de árvores descorrelacionadas e combina suas predições
+por voto majoritário, atingindo desempenho comparável ao
+\textit{boosting}\footnote{\textit{Boosting}: família de técnicas de ensemble
+que treina modelos sequencialmente, onde cada modelo concentra-se nos erros
+cometidos pelo anterior, reduzindo progressivamente o viés da predição
+combinada.} com menor
 custo de ajuste. \citeonline{GERON2019} complementa que o algoritmo introduz
 aleatoriedade adicional na seleção de variáveis em cada nó da árvore, reduzindo a
 variância sem aumentar proporcionalmente o viés, propriedade especialmente
@@ -399,11 +411,27 @@ perigosas, tempestades, turbulência e baixa visibilidade, obtendo desempenho
 superior ao de Random Forest e LSTM em acurácia, ROC-AUC e F1-score.
 
 O quarto modelo base é o \textbf{Perceptron Multicamadas} (MLP), uma rede neural
-artificial do tipo \textit{feedforward} treinada por retropropagação do gradiente,
+artificial do tipo \textit{feedforward}\footnote{\textit{Feedforward}:
+arquitetura de rede neural em que a informação flui em uma única direção, da
+camada de entrada pelas camadas ocultas até a camada de saída, sem conexões
+de retorno entre camadas.} treinada por retropropagação do gradiente,
 cuja arquitetura com camadas ocultas e função de ativação não-linear permite
 aprender representações hierárquicas dos dados \cite{HASTIE2009,MITCHELL1997}.
 \citeonline{HARMS2020} demonstra, em contexto aeronáutico real, que redes MLP
-com otimizador Adam, ativação ReLU e \textit{early stopping} são capazes de
+com otimizador Adam\footnote{\textit{Adam} (\textit{Adaptive Moment
+Estimation}): algoritmo de otimização para redes neurais que adapta
+individualmente a taxa de aprendizado de cada parâmetro com base em estimativas
+do primeiro e segundo momentos dos gradientes, combinando as vantagens do
+RMSProp e do momentum.}, ativação ReLU\footnote{\textit{ReLU}
+(\textit{Rectified Linear Unit}): função de ativação definida por
+$f(x) = \max(0, x)$, amplamente utilizada em redes neurais profundas por
+introduzir não-linearidade de forma computacionalmente eficiente e mitigar o
+problema do gradiente que desaparece.} e \textit{early stopping}\footnote{%
+\textit{Early stopping} (parada antecipada): técnica de regularização que
+monitora o desempenho do modelo em um conjunto de validação durante o
+treinamento e interrompe o processo quando esse desempenho para de melhorar
+por um número definido de épocas consecutivas, evitando overfitting.} são
+capazes de
 identificar precursores indiretos de eventos de segurança de voo, com os parâmetros
 meteorológicos ocupando posição dominante no ranking de relevância de
 \textit{features} atribuído pelo algoritmo Relief. No presente trabalho, o MLP foi configurado com duas camadas ocultas [128, 64],
@@ -416,7 +444,11 @@ A combinação dos quatro modelos base foi realizada pela técnica de
 \textbf{Stacking Generalizado}, proposta originalmente por \citeonline{WOLPERT1992}.
 O Stacking é uma abordagem de combinação de modelos (\textit{ensemble}) em que,
 ao invés de se escolher um único melhor modelo ou combinar predições por média
-simples, os modelos base, chamados de \textit{nível 0} ou \textit{base learners}, são treinados de forma
+simples, os modelos base, chamados de \textit{nível 0} ou
+\textit{base learners}\footnote{\textit{Base learners} (modelos base de nível
+0): modelos individuais que compõem a primeira camada do Stacking Ensemble,
+treinados de forma independente sobre os dados originais para gerar as
+predições que servirão de entrada ao meta-aprendiz.}, são treinados de forma
 independente e suas predições são utilizadas
 como entrada de um novo modelo, o meta-aprendiz de \textit{nível 1}, que aprende
 qual combinação entre eles produz o melhor resultado global.
@@ -447,7 +479,10 @@ combinador é fundamentada por \citeonline{WOLPERT1992} e \citeonline{HASTIE2009
 que recomendam modelos simples nesse papel porque o espaço de meta-features já
 contém a informação discriminativa destilada pelos modelos de nível 0, e modelos
 mais simples tendem a generalizar melhor nessa posição, evitando
-\textit{overfitting} do meta-nível.
+\textit{overfitting}\footnote{\textit{Overfitting} (sobreajuste): fenômeno em
+que o modelo ajusta-se excessivamente aos padrões específicos dos dados de
+treinamento, incluindo ruído, perdendo capacidade de generalização para dados
+novos não vistos durante o treino.} do meta-nível.
 
 \subsubsection{Aplicações da IA na segurança aeronáutica e limitações identificadas
 pela literatura}
@@ -494,8 +529,15 @@ aeródromos brasileiros do OurAirports \cite{OURAIRPORTS2026}. A camada de proce
 scripts de ingestão, integração, geração de dados sintéticos e engenharia de
 \textit{features}. A camada de inferência carrega o modelo Stacking Ensemble
 serializado e aplica a lógica de status e \textit{overrides} de segurança. Por fim,
-a camada de apresentação disponibiliza uma interface web via Flask, com geração
-de relatório técnico em PDF pela biblioteca ReportLab e consulta meteorológica em
+a camada de apresentação disponibiliza uma interface web via
+Flask\footnote{\textit{Flask}: microframework Python para desenvolvimento de
+aplicações web, que oferece roteamento de URLs, renderização de templates e
+suporte a requisições HTTP com configuração mínima.}, com geração de relatório
+técnico em PDF pela biblioteca
+ReportLab\footnote{\textit{ReportLab}: biblioteca Python para geração
+programática de documentos PDF, permitindo criar relatórios com texto, tabelas,
+imagens e formatação personalizada diretamente no código.} e consulta
+meteorológica em
 tempo real à API Open-Meteo \cite{OPENMETEO2026} para datas futuras.
 
 \subsection{Engenharia de features}
@@ -701,15 +743,22 @@ diagnóstico do modelo. A Figura~\ref{fig:interface_web} exibe a interface do si
 
 Esta pesquisa é de natureza aplicada, com abordagem quantitativa, por utilizar
 dados estruturados, métricas numéricas e experimentação computacional, e
-caráter exploratório, descritivo e experimental, ao investigar e testar técnicas de
-Inteligência Artificial para o problema de segurança de voo.
+caráter exploratório, descritivo e experimental, ao investigar e testar técnicas
+de Inteligência Artificial para o problema de segurança de voo. O processo
+metodológico segue a estrutura do \textit{Knowledge Discovery in Databases}
+(KDD), adotada por \citeonline{HARMS2020} em contexto aeronáutico equivalente,
+que organiza o fluxo de trabalho em etapas sequenciais de coleta, integração,
+pré-processamento, treinamento, validação e avaliação, permitindo que o efeito
+de cada decisão metodológica seja isolado e analisado de forma sistemática.
 
 \subsection{Fontes de dados e rotulagem}
 
 A fonte primária de dados para treinamento foi o banco de ocorrências do CENIPA
 \cite{CENIPA2025}, composto por registros de acidentes, incidentes graves e
-incidentes da aviação civil brasileira entre 2007 e 2025. Cada ocorrência foi
-rotulada em quatro classes de acordo com a gravidade do evento:
+incidentes da aviação civil brasileira entre 2007 e 2025. O esquema de
+rotulagem adota diretamente a taxonomia oficial do CENIPA, alinhada às
+definições da ICAO \cite{ICAO2018}, classificando cada ocorrência conforme a
+gravidade do dano:
 
 \begin{itemize}
   \item \textbf{Classe 3, Acidente:} dano destruído com fatalidades;
@@ -717,57 +766,86 @@ rotulada em quatro classes de acordo com a gravidade do evento:
   \item \textbf{Classe 1, Incidente:} dano leve ou nenhum dano.
 \end{itemize}
 
+Essa estrutura hierárquica de gravidade garante que o modelo aprenda gradações
+reais de risco operacional, em vez de uma classificação binária simplificada.
+O banco CENIPA contém, no período 2007--2025, aproximadamente 13.185 ocorrências
+rotuladas (Classes 1, 2 e 3) após integração meteorológica e remoção de registros
+com variáveis críticas ausentes.
+
 Uma limitação estrutural do banco CENIPA é que ele registra apenas ocorrências,
-não contendo voos normais. Para que o modelo aprendesse a distinguir o que é
-seguro do que é perigoso, foi introduzida a \textbf{Classe 0, Voo Normal},
-representada por 5.000 amostras sintéticas geradas com perfis realistas de
-aeronaves e distribuições meteorológicas dentro de faixas seguras (baixo vento,
-ausência de precipitação, temperatura e umidade normais), com distribuição de
-tipos de aeronave representativa da aviação civil brasileira.
+não contendo voos normais. Como observa \citeonline{HARMS2020}, eventos de
+segurança são, do ponto de vista analítico, essencialmente anomalias em um
+universo de operações bem-sucedidas, e a ausência de registros negativos é um
+desafio estrutural nos dados aeronáuticos que precisa ser endereçado antes do
+treinamento. Para que o modelo aprendesse a distinguir o que é seguro do que é
+perigoso, foi introduzida a \textbf{Classe 0, Voo Normal}, representada por
+5.000 amostras sintéticas geradas com perfis realistas de aeronaves e
+distribuições meteorológicas dentro de faixas seguras (baixo vento, ausência de
+precipitação, temperatura e umidade normais), com distribuição de tipos de
+aeronave representativa da aviação civil brasileira. A opção pela geração
+sintética justifica-se pela inexistência de uma base pública equivalente ao
+CENIPA para operações sem ocorrência na aviação civil brasileira.
 
 Os dados meteorológicos históricos foram obtidos do INMET \cite{INMET2024}
-(arquivos CSV por ano e estado, cobrindo o período de 2000 a 31 de março de 2026),
-integrados às ocorrências do CENIPA por data e estado de origem. Para análises
-de voos com datas posteriores a 31 de março de 2026 ou futuras (até 15 dias à
-frente da data atual), o sistema consulta a API Open-Meteo \cite{OPENMETEO2026} em tempo de inferência.
-A base de aeródromos brasileiros foi obtida do OurAirports \cite{OURAIRPORTS2026}, permitindo o
+(arquivos CSV por ano e estado, cobrindo o período de 2000 a 31 de março de
+2026), integrados às ocorrências do CENIPA por data e estado de origem. Para
+análises de voos com datas posteriores a 31 de março de 2026 ou futuras (até
+15 dias à frente da data atual), o sistema consulta a API
+Open-Meteo \cite{OPENMETEO2026} em tempo de inferência. A base de aeródromos
+brasileiros foi obtida do OurAirports \cite{OURAIRPORTS2026}, permitindo o
 \textit{lookup} por cidade e UF.
 
 \subsection{Pré-processamento e balanceamento de classes}
 
 As \textit{features} numéricas foram padronizadas pelo \textbf{StandardScaler}
-\cite{SCIKITLEARN2026} --- que transforma cada variável para média zero e desvio padrão unitário,
-prática explicitamente recomendada por \citeonline{HASTIE2009} antes do treinamento
-de redes neurais e SVMs, para que a escala das variáveis não influencie
-artificialmente o aprendizado. As \textit{features} categóricas foram transformadas
-pelo \textbf{OneHotEncoder}, que converte cada categoria em uma coluna binária,
-evitando que o modelo trate categorias como ordinais.
-
-Mesmo após a geração de amostras sintéticas para a Classe 0, o conjunto de dados
-permaneceu desbalanceado, com a Classe 2 (Incidente Grave) sendo a menos
-representada. Para mitigar esse desbalanceamento, foi aplicada a técnica
-\textbf{SMOTE} (\textit{Synthetic Minority Over-sampling Technique}), proposta por
-\citeonline{CHAWLA2002}. O SMOTE gera novas amostras sintéticas para as classes
-minoritárias por \textit{interpolação no espaço de features}: para cada amostra da
-classe minoritária, são identificados os $k$ vizinhos mais próximos e novas
-amostras são criadas em posições aleatórias ao longo das retas que ligam essa
-amostra a seus vizinhos. Dessa forma, o SMOTE aumenta a representatividade das
-classes raras sem simplesmente repetir amostras existentes.
-\citeonline{HARMS2020} demonstra que o \textit{oversampling}\footnote{%
-\textit{Oversampling} (superamostragem): técnica de balanceamento de classes
-que aumenta artificialmente o número de amostras das classes minoritárias,
-gerando novas instâncias sintéticas para reduzir o desequilíbrio no conjunto
-de treinamento.} é etapa metodológica essencial em dados aeronáuticos desbalanceados: sem ele, o modelo
-falha completamente em aprender as classes positivas de eventos de segurança.
+\cite{SCIKITLEARN2026} --- que transforma cada variável para média zero e desvio
+padrão unitário, prática explicitamente recomendada por \citeonline{HASTIE2009}
+antes do treinamento de redes neurais e SVMs, para que a escala das variáveis
+não influencie artificialmente o aprendizado. As \textit{features} categóricas
+foram transformadas pelo \textbf{OneHotEncoder}, que converte cada categoria em
+uma coluna binária, evitando que o modelo trate categorias como ordinais.
 
 O conjunto resultante, composto por 18.171 registros após integração, geração
-sintética e limpeza, foi dividido em treino (80\%, 14.536 amostras) e teste (20\%,
-3.635 amostras), sendo o SMOTE aplicado exclusivamente ao conjunto de treino para
-evitar vazamento de dados. Após a aplicação do SMOTE, todas as quatro classes foram
-elevadas para 7.304 amostras no conjunto de treino, totalizando 29.216 amostras
-balanceadas para o treinamento dos modelos base.
-A Figura~\ref{fig:fase_dados} ilustra o fluxo de processamento dos dados brutos
-até o conjunto pronto para treinamento.
+sintética e limpeza, foi dividido em treino (80\%, 14.536 amostras) e teste
+(20\%, 3.635 amostras). A divisão foi estratificada por classe para manter a
+distribuição original de gravidade em ambos os subconjuntos, procedimento
+recomendado por \citeonline{GERON2019} para classificação com classes
+desbalanceadas. O conjunto de teste foi separado antes de qualquer
+transformação ou balanceamento, garantindo a ausência de vazamento de dados
+(\textit{data leakage})\footnote{\textit{Data leakage} (vazamento de dados):
+situação em que informações do conjunto de teste influenciam, direta ou
+indiretamente, o treinamento do modelo, produzindo estimativas de desempenho
+artificialmente otimistas que não se reproduzem em dados reais.} entre as
+fases de treinamento e avaliação.
+
+Mesmo após a geração de amostras sintéticas para a Classe~0, o conjunto de
+treinamento permaneceu desbalanceado, com a Classe~2 (Incidente Grave) sendo a
+menos representada. Para mitigar esse desbalanceamento, foi aplicada a técnica
+\textbf{SMOTE} (\textit{Synthetic Minority Over-sampling Technique}), proposta
+por \citeonline{CHAWLA2002}. O SMOTE gera novas amostras para as classes
+minoritárias por \textit{interpolação no espaço de features}: para cada amostra
+da classe minoritária, são identificados os $k$ vizinhos mais próximos e novas
+amostras são criadas em posições aleatórias ao longo dos segmentos que ligam
+essa amostra a seus vizinhos. A superioridade do SMOTE sobre a simples
+duplicação aleatória reside na generalização: ao gerar exemplos em posições
+intermediárias no espaço de \textit{features}, o algoritmo força o classificador
+a aprender regiões de decisão mais amplas para a classe minoritária, reduzindo o
+risco de \textit{overfitting} localizado que a duplicação pura introduziria
+\cite{CHAWLA2002}. \citeonline{HARMS2020} demonstra que o
+\textit{oversampling}\footnote{\textit{Oversampling} (superamostragem): técnica
+de balanceamento de classes que aumenta artificialmente o número de amostras das
+classes minoritárias, gerando novas instâncias sintéticas para reduzir o
+desequilíbrio no conjunto de treinamento.} é etapa metodológica essencial em
+dados aeronáuticos desbalanceados: sem ele, o modelo falha completamente em
+aprender as classes positivas de eventos de segurança.
+
+O SMOTE foi aplicado exclusivamente ao conjunto de treino, garantindo que o
+conjunto de teste permaneça com a distribuição real dos dados e reflita
+fielmente as condições operacionais encontradas na prática. Após a aplicação,
+todas as quatro classes foram elevadas para 7.304 amostras no conjunto de
+treino, totalizando 29.216 amostras balanceadas para o treinamento dos modelos
+base. A Figura~\ref{fig:fase_dados} ilustra o fluxo completo de processamento
+dos dados brutos até o conjunto balanceado pronto para treinamento.
 
 \begin{figure}[htbp]
   \centering
@@ -780,47 +858,88 @@ até o conjunto pronto para treinamento.
 \subsection{Treinamento e validação cruzada}
 
 Os quatro modelos base foram treinados de forma independente no conjunto de
-treino balanceado. Para garantir que as predições utilizadas no treinamento do
-meta-aprendiz fossem não enviesadas, empregou-se a técnica de
-\textbf{predições \textit{out-of-fold}} com \textbf{validação cruzada de 5
-partições} (\textit{5-fold cross-validation}): o conjunto de treinamento é
-dividido em 5 subconjuntos (\textit{folds}), e para cada \textit{fold}, os
-modelos base são treinados nos 4 subconjuntos restantes e geram predições para
-o subconjunto reservado, de modo que cada instância recebe uma predição de
-um modelo que nunca a viu durante o treino. Essas predições fora da amostra
-constituem as \textit{meta-features} que alimentam o meta-aprendiz. Após a
-geração das meta-features, a Regressão Logística Multinomial meta-aprendiz foi
-treinada sobre elas, e o ensemble completo foi serializado para uso em
-inferência. A avaliação dos modelos empregou como critérios primários o
-F1-Score Macro e o ROC-AUC, privilegiando o equilíbrio entre desempenho geral
-e representatividade das classes minoritárias.
+treino balanceado. Os hiperparâmetros de cada modelo foram definidos por
+combinação de busca em grade (\textit{grid search})\footnote{\textit{Grid
+search} (busca em grade): método de otimização de hiperparâmetros que avalia
+sistematicamente todas as combinações de valores candidatos pré-definidos,
+selecionando a configuração com melhor desempenho segundo uma métrica de
+validação cruzada.} e avaliação experimental,
+sendo os valores finais documentados na Seção~3.2. Para garantir que as
+predições utilizadas no treinamento do meta-aprendiz fossem não enviesadas,
+empregou-se a técnica de \textbf{predições \textit{out-of-fold}}\footnote{%
+\textit{Out-of-fold predictions} (predições fora da amostra): predições
+geradas por um modelo para instâncias que não fizeram parte de seu conjunto
+de treinamento naquela partição da validação cruzada, garantindo que cada
+exemplo receba uma predição de um modelo que nunca o viu durante o treino.}
+com \textbf{validação cruzada de 5 partições}
+(\textit{5-fold cross-validation}): o conjunto de treinamento é dividido em
+5 subconjuntos (\textit{folds}), e para
+cada \textit{fold}, os modelos base são treinados nos 4 subconjuntos restantes
+e geram predições para o subconjunto reservado, de modo que cada instância
+recebe uma predição de um modelo que nunca a viu durante o treino. Essas predições fora da amostra constituem as
+\textit{meta-features}\footnote{\textit{Meta-features}: conjunto de
+características derivadas das predições dos modelos base, utilizado como
+entrada do meta-aprendiz no Stacking Ensemble em substituição às
+\textit{features} originais dos dados.} que alimentam o meta-aprendiz.
+
+A escolha de 5 partições equilibra o viés e a variância da estimativa de
+desempenho: um número menor de partições reduz o conjunto de treinamento
+disponível por \textit{fold} e aumenta o viés da estimativa; um número maior
+eleva o custo computacional e a variância entre estimativas, sem ganho
+proporcional em precisão \cite{HASTIE2009,GERON2019}. \citeonline{WALDEN2023}
+adotam procedimento equivalente de validação cruzada para verificar a
+generalização dos modelos de FRAT modernizado, reforçando a adequação dessa
+abordagem em dados aeronáuticos.
+
+Após a geração das \textit{meta-features}, a Regressão Logística Multinomial
+meta-aprendiz foi treinada sobre elas, e o ensemble completo foi serializado via
+\textit{joblib}\footnote{\textit{Joblib}: biblioteca Python especializada em
+serialização eficiente de objetos de grande porte, como modelos de
+\textit{machine learning}, permitindo salvar e carregar o ensemble treinado
+em disco sem necessidade de retreinamento.} para uso em inferência sem
+necessidade de retreinamento. A
+avaliação final empregou como critérios primários o F1-Score Macro e o ROC-AUC,
+privilegiando o equilíbrio entre desempenho geral e representatividade das
+classes minoritárias.
 
 \subsection{Métricas de avaliação}
 
-A avaliação do modelo foi conduzida por meio de três métricas principais.
+A avaliação do modelo foi conduzida por meio de três métricas principais,
+escolhidas pela sua complementaridade: a Acurácia fornece uma visão global do
+desempenho; o F1-Score Macro equilibra o desempenho entre classes
+independentemente de sua frequência; e o ROC-AUC avalia a capacidade
+discriminativa do modelo independentemente do limiar de decisão adotado.
 
 A \textbf{Acurácia} expressa a proporção de previsões corretas sobre o total de
 instâncias avaliadas. Contudo, conforme demonstrado por \citeonline{LIU2024} e
-\citeonline{HARMS2020}, ela pode ser enganosa em conjuntos desbalanceados ,
-onde um classificador trivial que prevê sempre a classe majoritária obteria valores
-elevados sem qualquer capacidade preditiva real sobre as classes raras.
+\citeonline{HARMS2020}, ela pode ser enganosa em conjuntos desbalanceados,
+onde um classificador trivial que prevê sempre a classe majoritária obteria
+valores elevados sem qualquer capacidade preditiva real sobre as classes raras.
 
 O \textbf{F1-Score Macro} é a média harmônica entre Precisão e Revocação,
 calculada individualmente para cada classe e depois como média aritmética entre
-elas, atribuindo peso igual a todas as classes independentemente de sua frequência.
-\citeonline{SOKOLOVA2009} formalizam essa propriedade como fundamental em
-problemas com classes desbalanceadas. \citeonline{CHICCO2020} reforçam que
-métricas sensíveis ao desequilíbrio, como a acurácia isolada, são insuficientes em
-cenários com distribuição assimétrica. O F1 Macro foi adotado como \textbf{critério
-primário de seleção} do modelo final.
+elas, atribuindo peso igual a todas as classes independentemente de sua
+frequência. \citeonline{SOKOLOVA2009} formalizam essa propriedade como
+fundamental em problemas com classes desbalanceadas. \citeonline{CHICCO2020}
+reforçam que métricas sensíveis ao desequilíbrio, como a acurácia isolada, são
+insuficientes em cenários com distribuição assimétrica. O F1 Macro foi adotado
+como \textbf{critério primário de seleção} do modelo final.
 
 O \textbf{ROC-AUC} (\textit{Receiver Operating Characteristic, Area Under the
-Curve}) resume a capacidade discriminativa do classificador em todos os limiares de
-decisão possíveis em um único escalar entre 0,5 (desempenho aleatório) e 1,0
-(classificador perfeito). \citeonline{FAWCETT2006} demonstra que o AUC equivale à
-probabilidade de que o modelo atribua pontuação de risco mais alta a um voo
-perigoso do que a um voo normal escolhidos ao acaso, e destaca sua insensibilidade
-à distribuição de classes.
+Curve}) resume a capacidade discriminativa do classificador em todos os limiares
+de decisão possíveis em um único escalar entre 0,5 (desempenho aleatório) e
+1,0 (classificador perfeito). \citeonline{FAWCETT2006} demonstra que o AUC
+equivale à probabilidade de que o modelo atribua pontuação de risco mais alta a
+um voo perigoso do que a um voo normal escolhidos ao acaso, e destaca sua
+insensibilidade à distribuição de classes. \citeonline{CHAWLA2002} reforçam que,
+em problemas com classes desbalanceadas, o ROC-AUC é a métrica mais adequada
+para comparação entre classificadores, por resumir o
+\textit{trade-off}\footnote{\textit{Trade-off}: relação de compromisso entre
+dois objetivos concorrentes em que a melhoria de um implica a piora do outro;
+no contexto de classificação, refere-se ao equilíbrio entre taxa de verdadeiros
+positivos e taxa de falsos positivos ao se variar o limiar de decisão.} entre
+taxa de verdadeiros positivos e taxa de falsos positivos em todos os limiares
+possíveis, sem ser distorcido pela dominância da classe majoritária.
 
 %=======================================================================
 \section{Resultados e Discussão}

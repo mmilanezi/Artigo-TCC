@@ -1,0 +1,289 @@
+A Formação de Gelo em Aeronaves
+ (FGA)
+Descomplicada
+Conheça e esteja preparado!
+               Por Cap Esp Met Brandão*
+Uma curiosidade: nesta capa, o 
+produto de FGA baseado em satélite, 
+processado em 02 de agosto de 2011, 
+mostrou nuvens estratiformes, as 
+realçadas em azul, com potencial de 
+FGA, moderada a severa, sobre várias 
+regiões do Brasil e da América do sul. 
+Nesse dia, três aeronaves da FAB (2 
+Caravan e 1 Helicóptero) sofreram FGA 
+quando voavam na FIR-CW.
+*o autor é Oficial Especialista em Meteorologia Aeronáutica. Serve atualmente 
+no Centro Nacional de Meteorologia Aeronáutica (CNMA/CINDACTA I), como 
+previsor  e Chefe da Seção de Meteorologia de Defesa. Possui Mestrado em 
+Meteorologia pelo Instituto Nacional de Pesquisas Espaciais (INPE), com linha 
+de pesquisa em Sensoriamento Remoto da Atmosfera. No Brasil, foi pioneiro 
+em estudo científico sobre a Formação Gelo em  Aeronaves.
+Um guia para pilotos
+Setembro de 20161 UMA BREVE INTRODUÇÃO
+Prezado Piloto, para gerenciar efetivamente os riscos de voar em condições de
+Formação de Gelo em Aeronaves (FGA), é recomendável ter conhecimento suficiente
+sobre o fenômeno, para verificar quando e onde ele pode ser encontrado, e como tal
+fenômeno pode afetar a sua aeronave.
+É interessante ressaltar que, em âmbito mundial, a FGA foi responsável pelo
+maior número de acidentes aeronáuticos. No Brasil, foram registrados, nos últimos anos,
+um elevado número de reportes de formação de gelo em aeronaves, com intensidade
+moderada e/ou severa, tendo muitos pilotos a necessidade de escapar das nuvens com
+potencial de FGA, fins de manter a segurança de voo.
+Nesse guia, nós vamos abordar diversos tópicos, essenciais para que você possa
+realizar um voo com mais segurança. Esteja mais seguro com essa rápida leitura.
+2 CONHECENDO A FGA
+A FGA é a ocorrência de congelamento de gotículas de nuvem e/ou gotas de
+precipitação congelante sobre partes da estrutura aerodinâmica ou nos sistemas de ar
+e/ou  combustível  de  uma  aeronave  em  voo  ou  no  solo.  Da  mesma  forma  que  o
+cumulonimbus (CB) e a Turbulência em Ar Claro (TAC), a FGA pode representar um sério
+perigo à atividade aérea. Muitas aeronaves civis e militares voam acima dos limiares de
+temperatura  para  a  presença  de  FGA.  Todavia,  as  condições  potenciais  podem  ser
+encontradas durante todas as fases do voo de subida, descida ou em situações de espera
+em voo (órbita), muitas vezes determinada por órgão de controle de tráfego aéreo, em
+virtude de excesso de tráfego nos aeroportos.
+Tipicamente, os cenários de FGA (de nuvens estratiformes) são mais frequentes
+no outono e inverno, por apresentarem a presença de massas de ar frio atuando. Vale
+lembrar que as nuvens TCU e CB sempre poderão provocar FGA severa, pois o tamanho
+das gotículas desses tipos de nuvens são bem maiores que os das nuvens estratiformes. 
+Os sistemas meteorológicos que mais podem favorer à FGA no Brasil são:
+1- o lado frio de uma frente quente;
+2- o lado frio de uma frente fria;
+3- o lado frio de um ciclone extratropical; e 
+4- nuvens extensas da Zona de Convergência do Atlântico Sul (ZCAS). Regra de Ouro nº 1
+Se: For voar ao longo de uma frente quente.
+Ação: Se possível cruze a frente quente numa direção mais
+transversal. Voe no lado quente.
+Dicas: Verifique as previsões disponíveis.
+Por quê: Para diminuir a exposição da aeronave ao risco.
+Regra de Ouro nº 2
+Se: For voar ao longo de uma frente fria.
+Ação: Se  possível  cruze  a  frente  fria  numa  direção  mais
+transversal.  Ao  cruzar,  tome  cuidado  com  as  formações
+convectivas.  Desvie  utilizando  radar  meteorológico  de
+bordo, se disponível. Voe no lado quente. 
+Dicas: Verifique as previsões disponíveis.
+Por quê: O levantamento vertical da rampa frontal fria pode
+favorecer a severas condições de FGA.
+3 O IMPACTO DA FGA
+A FGA oferece efeitos desfavoráveis sobre os voos. Quando a FGA ocorre com
+intensidade severa, os pilotos em comando geralmente são obrigados a mudar de rota
+e/ou de nível de voo, com o escopo de minimizar os impactos causados na aerodinâmica
+da aeronave.
+O gelo quando formado na estrutura da aeronave pode destruir o suave fluxo do
+ar e, consequentemente, aumentar (diminuir) o arrasto (a sustentação) do voo, podendo
+também causar problemas de controle da aeronave. Sob condições de FGA, moderada a
+severa, principalmente em uma aeronave de pequeno porte, a continuidade do voo pode
+se tornar impossível. A Figura 1 mostra o balanço de forças em uma aeronave.Figura 1: Esquema mostrando o balanço de forças que atuam 
+sobre uma aeronave em voo.
+                              Fonte: NASA (2010).
+4 O RISCO DE FGA
+A temperatura da nuvem é um parâmetro relevante para a formação de gelo em
+aeronaves,  já  que  significativa  formação  ocorre  somente  em  nuvem  ou  precipitação
+compostas de gotículas super-resfriadas. Ao  voar dentro de nuvem ou sob precipitação
+congelante, o piloto deve verificar a temperatura estática (SAT) para saber se está em
+uma  camada  super-resfriada  com  potencial  de  FGA.  O  Fenômeno  é  mais  frequente
+quando a temperatura estática está entre +2ºC e -20ºC, embora possa ocorrer fora desse
+intervalo, conforme mostra a Tabela 1, que esboça o risco por tipo de nuvem. É isso
+mesmo! Mesmo voando sob temperatura positiva (entre +2ºC e 0ºC) é possível formar
+FGA, pois as gotículas ao se chocarem na estrutura da aeronave, perdem calor e podem
+se congelar. 
+Outra variável a ser considerada é a temperatura da superfície da aeronave. Para
+que haja a formação de significativa quantidade de gelo em aeronaves, além da presença
+de água líquida super-resfriada, a superfície da aeronave deve estar mais fria que 0ºC .
+A quantidade do gelo formado na superfície da aeronave depende do tempo de
+exposição, da densidade de água líquida super-resfriada presente e da eficiência de
+coleta. Um aumento nessa eficiência de coleta está relacionado diretamente ao aumento
+da velocidade da aeronave e ao tamanho das gotículas.
+Nuvens cumuliformes
+(TCU, CB)
+ Nuvens estratiformes  Chuva ou chuvisco
+0ºC a -20ºC
+Risco Alto
+0ºC a -15ºC 0ºC e abaixo
+-20ºC a -40ºC
+Risco Médio
+-15ºC a -30ºC
+<-40ºC
+Risco Baixo
+<-30ºC
+Tabela 1: Risco de FGA por tipo de nuvem e faixa de temperatura.
+Fonte: CIVIL AVIATION AUTHORITY (2000).
+5 A INTENSIDADE DA FGA
+A severidade da FGA é dependente do tipo da aeronave. As aeronaves que
+possuem bordos de ataque menos espessos são acumuladores de gelo mais eficientes.
+Por essa razão, aerofólios menores e/ou menos espessos podem sofrer acumulação de
+gelo mais rapidamente do que os aerofólios maiores e/ou mais espessos. Com isso, uma
+aeronave comercial de grande porte terá, proporcionalmente, menor FGA do que uma
+aeronave de pequeno porte, cruzando o mesmo ambiente favorável à ocorrência de FGA.
+A FGA pode ser classificada como severa quando a taxa de acumulação é tal que
+os equipamentos antigelo e degelo se tornam ineficazes.6 TIPOS DE FGA
+A FGA pode ocorrer nas seguintes formas: gelo claro (tipo transparente), escarcha
+(tipo opaco) ou gelo misto. O gelo claro é o tipo mais perigoso e geralmente ocorre
+associado a nuvens cumuliformes, que apresentam gotículas grandes, ou à precipitação
+congelante; essa devido à presença de nimbostratus (NS). O tipo escarcha geralmente
+ocorre associado a nuvens estratiformes, que, ao contrário das cumuliformes, apresentam
+gotículas menores, sendo seu impacto na aerodinâmica da aeronave menos significativo.
+Já o gelo misto surge em face da variação do tamanho das gotículas de nuvens, sendo
+uma mistura entre o tipo claro e o opaco. Em geral, o gelo misto está relacionado às
+nuvens médias, altostratus (AS) e altocumulos (AC), oferecendo impacto moderado.
+Regra de Ouro nº 3
+Se: Encontrar FGA em nuvens estratiformes
+Ação: Imediatamente ative o sistema de proteção caso não
+esteja ativado. Monitore a situação. Mude sua altitude em
+pelo menos 3000FT.
+Dica: Camadas  extensas  com  pouco  desenvolvimento
+vertical.
+Por  quê:  Voo  em  nuvens  estratiformes  extensas,  com
+potencial de FGA, aumentam a exposição da aeronave às
+condições  de  FGA.  Uma mudança de  3000FT na altitude,
+geralmente livrará seu voo dos impactos da FGA, mesmo se
+a aeronave ainda permanecer dentro da nuvem.
+Regra de Ouro nº 4
+Se:  A temperatura (SAT) estiver entre +2ºC e -20ºC e você
+consegue manter a separação visual das nuvens.
+Ação: Voe lateralmente em volta das nuvens cumulus.
+Dica: Formação de nuvens com extenso desenvolvimento
+vertical.
+Por quê:  FGA provocada por nuvens cumuliformes (TCU e
+CB)  geralmente  são  de  curta  duração,  mas  podem  de
+intensidade muito severa e oferecer um alto risco para a
+segurança de voo.7 COMO EVITAR AS CONDIÇÕES DE FGA
+O SISCEAB, por intermédio de  seu subsistema  de Meteorologia  Aeronáutica,
+oferece produtos que reportam, quando for o caso, a presença, observada ou prevista, de
+nuvens com potencial de FGA. Todos esses produtos são disponibilizados na REDEMET.
+Para  o  planejamento  do  seu  voo,  verifique  na  carta  de  previsão  de  tempo
+significativo (SIGWX) se há a previsão de FGA e também selecione, na REDEMET, o
+caminho Modelos – WAFS, e escolha como produto o Potencial de Formação de Gelo em
+Aeronaves. Preferencialmente, selecione as rodadas 00Z ou 12Z mais recentes. Escolha
+a área e os níveis de voo.
+Consulte  antes  da  decolagem  e/ou  em  voo,  neste  caso  via  VOLMET,  se  foi
+emitido algum  SIGMET ou  AIRMET de  FGA (ICE será  a linguagem utilizada nesses
+produtos). 
+Para uma operação mais específica ou para obter mais detalhes, não hesite em
+fazer  contato  com  um  Oficial  Previsor  de  Serviço,  via  canal  HelpMet  das  Salas  de
+Informações Aeronáuticas. 
+Verifique também:
+1- se existe frente fria e para onde ela está se deslocando;
+2- as alturas da base e do topo das nuvens;
+3- se são nuvens frontais ou de uma mesma massa de ar;
+4- quais são as rotas alternativas e rotas para escapar das condições;
+5- se existe AIREP reportando FGA (aparecerá o termo ICE na mensagem AIREP)
+na área a ser voada. 
+E muito importante, aumente a sua segurança de voo e a de seus colegas de
+profissão. Ao enfrentar condições de FGA ou de qualquer outro fenômeno impactanteo,
+assim que possível, chame a frequência VOLMET disponível e reporte o evento.
+8 ESCAPANDO DAS CONDIÇÕES DE FGA
+Você  sabia  da  regra  geral  de  3000FT?  Para  a  maioria  dos  casos,  se  você
+encontrar FGA em sua rota, basta subir ou descer 3000FT, o que geralmente lhe permitirá
+sair das condições ou mitigar a intensidade de formação. Um estudo realizado pela Organização  Environment Canada  mostrou que em
+torno de 50% das camadas de FGA possuem espessura menor do que 1500FT e que
+aproximadamente  em  22%  dos  casos  as  camadas  tiveram  espessura  maior  do  que
+3500FT. A espessura média foi de 2200FT.
+“Quando  ocorrer  FGA,  imediatamente  adote  as  ações  para  sair  dessas
+condições.  Não  sendo  condições  de  chuva  ou  chuvisco  congelantes,  isso
+raramente vai requerer ações rápidas ou e certamente nunca o pânico, mas exigirá
+ações positivas.” -Capt. Robert Buck
+9 AS PERIGOSAS GOTÍCULAS GRANDES SUPER-RESFRIADAS
+A FGA causada por gotículas grandes super-resfriadas (GGS), que apresentam
+tamanho bem maior que o normal, pode apresentar um sério risco à aviação, pois as
+aeronaves  não  são  certificadas  para  voar  sob  tais  condições  meteorológicas.  Voos
+realizados nos Estados Unidos, com aeronaves instrumentadas, para a coleta de dados
+de pesquisa, sofreram FGA severa, tendo os pilotos que escapar imediatamente das
+nuvens para que a aeronave não caísse. 
+Regra de Ouro nº 5
+Se: Encontrar gotículas grandes super-resfriadas
+Ação: Saia das condições imediatamente. Geralmente, uma
+mudança de altitude de 3000FT é suficiente.
+Dicas: FGA no parabrisa, nas partes protegidas, nas hélices
+ou de intensidade maior que o normal.
+Por quê:  As aeronaves não são certificadas para voar em
+segurança em ambiente de GGS.
+Regra de Ouro nº 6
+Se: Uma  camada  de  gelo  se  formar  atrás  das  regiões
+protegidas.
+Ação: Saia  das  condições  imediatamente.  Voe  para  uma
+região/FL mais quente, onde essa camada de gelo possa se
+dissipar. 
+Dicas: FGA no parabrisa, nas partes protegidas, nas hélices
+ou de intensidade maior que o normal.
+Por quê: O gelo formado em partes não protegidas não pode
+ser removido pelo sistema de proteção.10 UM CASO BRASILEIRO EMBLEMÁTICO
+No dia 02 de agosto de 2011, uma aeronave tipo Caravan (C-98) da Força Aérea
+Brasileira  (FAB)  enfrentou  FGA,  com  intensidade  moderada  a  severa,  por  volta  de
+1430UTC, quando voava a aproximadamente 10.000FT (~ 3 km) de altitude, sobre a
+região serrana de Santa Catarina, na FIR-CW. Apesar de possuir sistemas antigelo e
+degelo, a aeronave foi obrigada a desviar sua rota prevista para sair das nuvens que
+estavam favorecendo a formação de gelo, por motivos de segurança de voo. Sobre a
+mesma  área,  foi  emitido  um  AIRMET,  reportando  potencial  de  FGA  pelo  Centro
+Meteorológico de Curitiba (CMV-CW).
+No  horário  do  evento  de  FGA  enfrentado  pela  aeronave  havia  um  ciclone
+extratropical em intensificação, que se aprofundou de 1005 hPa para 998 hPa, entre 00
+UTC e 12 UTC, e estava localizado com centro ligeiramente a leste do Rio Grande do Sul.
+A imagem do satélite GOES revelou a ocorrência de céu nublado a encoberto, com
+temperatura de topo média de -5ºC. Dados superfície, obtidos pela estação meteorológica
+de superfície de Porto Alegre, a mais próxima do local do evento, confirmaram a presença
+de nuvens altostratus.
+As fotos tiradas pela tripulação da aeronave (Figura 2) confirmaram a presença de
+FGA no trem de pouso (Figura 2a), nos parabrisas (Figura 2 c), na parte inferior das asas
+(Figura  2b) e nos bordos de ataque (Figura 2d). Estudos americanos, realizados com
+aeronave de pesquisa, identificaram que a rápida acumulação de gelo, incluindo partes
+inferiores das asas, esteve relacionada à presença de GGS. Nesses tipos de cenários, os
+voos sofreram impacto severo, com perda aerodinâmica significativa, tendo os pilotos que
+abandonar rapidamente as nuvens. A Figura 2b, que mostra pelotas de gelo em partes
+inferiores da asa, sugerindo que o cenário estava favorável à formação de GGS.
+É  importante  registrar  que  efeitos  locais  relacionados  à  topografia  da  região
+serrana  de  Santa  Catarina  podem  ter  contribuído  para  a  formação  de  GGS,  por
+intensificarem o crescimento das gotículas.Figura 2: Fotos do gelo formado no trem de pouso (a), na parte inferior da 
+asa (b), no parabrisa (c) e na parte frontal da asa (d).
+Fonte: Brandão (2013).
+Regra de Ouro nº 7
+Se:  Planeja voar a barlavento, ao longo de uma cadeia de
+montanhas, em que haja FGA observada ou prevista.
+Ação: Considere a possibilidade de voar a sotavento, para
+reduzir o risco de FGA. Mas, esteja atento a possibilidade de
+ondas orográficas.
+Por quê: O ar úmido é forçado a subir para o lado barlavento
+do terreno, podendo se resfriar rapidamente e provocar alto
+risco de FGA severa.
+REFERÊNCIAS BIBLIOGRÁFICAS
+AIRCRAFT OWNERS AND PILOTS ASSOCIATION (AOPA). Safety advisor,weather n.
+1: aircraft icing Frederick, MD, 2002.
+BERNSTEIN,  B.  C.;  OMERON,  T.  A.;  MCDONOUGH,  F.;  POLITOVICH  M.  K.  The
+relationship  between  aircraft  icing  and  synoptic  scale  weather  conditions.  Wea.
+Forecasting, v.12, p. 742–762, 1997.
+BERNSTEIN, B. C.; POLITOVICH , M. K.; MCDONOUGH, F. Surface weather features
+associated with freezing precipitation and severe in-flight aircraft icing. Atmos. Res., v. 46,
+p. 57–74, 1998.
+BERNSTEIN, B. C.; RATVASKY , T.; MILLER , D.; MCDONOUGH, F. Freezing rain as an
+in-flight  icing  hazard.  Preprints,  Eighth  Conf.  on  Aviation,  Range,  and  Aerospace
+Meteorology, Dallas, TX, Amer. Meteor. Soc., p. 38–42, 1999.
+BERNSTEIN, B. C. Regional and local influences on freezing drizzle, freezing rain, and ice
+pellet events. Wea. Forecasting, v. 15, p. 485–508, 2000a.
+BRANDÃO, F. G. UM ESTUDO SOBRE A FORMAÇÃO DE GELO EM AERONAVES NO
+BRASIL A PARTIR DE ANÁLISE MULTIESPECTRAL DE IMAGENS DE SATÉLITES
+GEOESTACIONÁRIOS:  Dissertação  de  mestrado  –Instituto  Nacional  de  Pesquisas
+Espaciais, São José dos Campos, 2013.
+CIVIL AVIATION AUTHORITY . Aircraft icing handbook. 1 Edição 2000. Disponível
+em <http://www.caa.govt.nz/fulltext/safety_booklets/aircraft_icing_handbook.pdf>.
+Acesso em: 20 fev. 2011.
+COBER, S. G.; STRAPP, J. W.; ISAAC, G. A. An example of supercooled drizzle drops
+formed through a collision-coalescence process. J. Appl. Meteor.,v. 35, p. 2250–2260,
+1996.
+CORTINAS JR., J. V.; BERNSTEIN, B. C.; ROBBINS, C. C.; STRAPP, J. W. An analysis of
+freezing rain, freezing drizzle, and ice pellets across the United States and Canada. Wea.
+Forecast., v. 19, p. 377–390, 2004.
+CURRY , J. A.; LIU G. Assessment of aircraft icing potential using satellite data. J. Appl.
+Meteor., v. 31, p. 605–621, 1992.
+MORENO  GARCIA,  MC;  GIL  AGUINALIU,  MA  (2003):  ANÁLISIS  DE  LA
+SINIESTRALIDAD  AÉREA  POR  CAUSA  METEOROLÓGICA.  INVESTIGACIONES
+GEOGRÁFICAS. UNIVERSIDADE DE ALICANTE.
+POBANZ, B. M.; MARWITZ, J. D.; POLITOVICH, M. K. “Conditions associated with large-
+drop regions”, J. Appl. Meteor. , v. 33, p. 1366-1372, 1994.
+POLITOVICH, M. K. Aircraft icing caused by large supercooled droplets. J. Appl. Meteor.,
+v. 28, p. 856–868, 1989.POLITOVICH, M. Response  of a research  aircraft to  icing and evaluation of severity
+indices. Journal of Aircraft, v. 33, p. 291-297, 1989.
+SAND,  W.  R.;  COOPER,  W.  A.;  POLITOVICH,  M.  K.;  VEAL,  D.  L.  Icing  conditions
+encountered by a research aircraft. J. Climate Appl. Meteor., v. 23, p. 1427–1440,
+1984.
+NASA ICING TRAINING COURSE.
