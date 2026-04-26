@@ -490,13 +490,13 @@ arquitetura é organizada em quatro camadas funcionais: \textbf{dados},
 A camada de dados reúne as fontes brutas: os arquivos históricos do CENIPA
 \cite{CENIPA2025} (ocorrências 2007--2025), os arquivos CSV do INMET
 \cite{INMET2024} organizados por ano e estado (2000--2026) e a base pública de
-aeródromos brasileiros do OurAirports. A camada de processamento engloba os
+aeródromos brasileiros do OurAirports \cite{OURAIRPORTS2026}. A camada de processamento engloba os
 scripts de ingestão, integração, geração de dados sintéticos e engenharia de
 \textit{features}. A camada de inferência carrega o modelo Stacking Ensemble
 serializado e aplica a lógica de status e \textit{overrides} de segurança. Por fim,
 a camada de apresentação disponibiliza uma interface web via Flask, com geração
 de relatório técnico em PDF pela biblioteca ReportLab e consulta meteorológica em
-tempo real à API Open-Meteo para datas futuras.
+tempo real à API Open-Meteo \cite{OPENMETEO2026} para datas futuras.
 
 \subsection{Engenharia de features}
 
@@ -504,7 +504,8 @@ O vetor de entrada do modelo é composto por 25 \textit{features} brutas que, ap
 pré-processamento, expandem-se para 189 dimensões. As 13 \textit{features}
 numéricas são submetidas ao StandardScaler; as 12 \textit{features} binárias são
 utilizadas sem transformação; e as 5 \textit{features} categóricas são codificadas
-pelo OneHotEncoder, gerando aproximadamente 164 colunas adicionais. O
+pelo OneHotEncoder, gerando aproximadamente 164 colunas adicionais,
+ambos os transformadores implementados pela biblioteca scikit-learn \cite{SCIKITLEARN2026}. O
 Quadro~\ref{quad:features} apresenta as variáveis numéricas e binárias do modelo.
 
 \begin{quadro}[ht]
@@ -728,14 +729,14 @@ Os dados meteorológicos históricos foram obtidos do INMET \cite{INMET2024}
 (arquivos CSV por ano e estado, cobrindo o período de 2000 a 31 de março de 2026),
 integrados às ocorrências do CENIPA por data e estado de origem. Para análises
 de voos com datas posteriores a 31 de março de 2026 ou futuras (até 15 dias à
-frente da data atual), o sistema consulta a API Open-Meteo em tempo de inferência.
-A base de aeródromos brasileiros foi obtida do OurAirports, permitindo o
+frente da data atual), o sistema consulta a API Open-Meteo \cite{OPENMETEO2026} em tempo de inferência.
+A base de aeródromos brasileiros foi obtida do OurAirports \cite{OURAIRPORTS2026}, permitindo o
 \textit{lookup} por cidade e UF.
 
 \subsection{Pré-processamento e balanceamento de classes}
 
 As \textit{features} numéricas foram padronizadas pelo \textbf{StandardScaler}
---- que transforma cada variável para média zero e desvio padrão unitário,
+\cite{SCIKITLEARN2026} --- que transforma cada variável para média zero e desvio padrão unitário,
 prática explicitamente recomendada por \citeonline{HASTIE2009} antes do treinamento
 de redes neurais e SVMs, para que a escala das variáveis não influencie
 artificialmente o aprendizado. As \textit{features} categóricas foram transformadas
@@ -976,15 +977,26 @@ status operacionais apresentados ao usuário pela interface do sistema, evidenci
 como as diferentes combinações de predição do modelo e das regras de
 \textit{override} de segurança se traduzem em diagnósticos distintos.
 
-\begin{figure}[p]
+\clearpage
+A Figura~\ref{fig:status_a} ilustra o status \textbf{Apto Seguro}: o modelo atribuiu
+99,8\% de probabilidade à Classe~0 (Voo Normal) e nenhuma condição L1 ou L2 foi
+identificada nas variáveis meteorológicas de entrada, resultando na classificação mais
+favorável do sistema.
+
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{images/Exemplo_apto_seguro.png}
+  \includegraphics[width=0.90\textwidth]{images/Exemplo_apto_seguro.png}
   \caption{Status operacional~(a): Apto Seguro (Classe~0, confiança $\geq$ 90\%)}
   \label{fig:status_a}
   \fonte{Elaborado pelo autor.}
 \end{figure}
 
-\begin{figure}[p]
+A Figura~\ref{fig:status_b} apresenta o status \textbf{Apto Requer Atenção}: embora o
+modelo tenha atribuído 75,6\% de probabilidade ao Voo Normal, a camada de
+\textit{overrides} identificou condição L1 ativa, umidade de 97\% com formação de
+nevoeiro e vento de 1,1 m/s, elevando automaticamente o status para atenção.
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/Exemplo_apto_requer_atencao.png}
   \caption{Status operacional~(b): Apto Requer Atenção (condição L1 ativa ou Classe~1)}
@@ -992,15 +1004,27 @@ como as diferentes combinações de predição do modelo e das regras de
   \fonte{Elaborado pelo autor.}
 \end{figure}
 
-\begin{figure}[p]
+\clearpage
+A Figura~\ref{fig:status_c} demonstra o status \textbf{Não Apto}: o modelo distribuiu
+as probabilidades em 19,4\% para Voo Normal, 53,1\% para Incidente e 19,6\% para
+Acidente, e a camada L2 detectou precipitação intensa de 21,4 mm/h, forçando a
+classificação mais restritiva independentemente da predição do classificador.
+
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{images/Exemplo_nao_apto.png}
+  \includegraphics[width=0.70\textwidth]{images/Exemplo_nao_apto.png}
   \caption{Status operacional~(c): Não Apto (condição L2 ativa, Classe~2 ou Classe~3)}
   \label{fig:status_c}
   \fonte{Elaborado pelo autor.}
 \end{figure}
 
-\begin{figure}[p]
+\clearpage
+A Figura~\ref{fig:status_d} exemplifica o status \textbf{Inconclusivo}: a ausência de
+dados meteorológicos históricos para o período e localidade consultados impediu a
+construção completa do vetor de \textit{features}, resultando em um diagnóstico
+indeterminado pelo sistema.
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/Exemplo_inconclusivo.png}
   \caption{Status operacional~(d): Inconclusivo (baixa confiança ou contradição meteorológica)}
