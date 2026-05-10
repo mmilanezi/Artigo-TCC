@@ -3,8 +3,8 @@
 **Trabalho de Conclusão de Curso — Ciência da Computação | UNISINOS**  
 **Autor:** Matheus Milanezi  
 **Status:** Beta 4.0
-**Version Documentation** 1.6
-**Version Model ML** 1.6
+**Version Documentation** 1.7
+**Version Model ML** Beta - 2.0
 
 ---
 
@@ -49,7 +49,7 @@ O **Sistema Inteligente de Apoio à Decisão Pré-Voo** é uma aplicação web d
 - **Dados meteorológicos** reais e previstos (INMET histórico + API Open-Meteo)
 - **Características da aeronave** e do itinerário planejado
 
-A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking Ensemble** classifica o risco de cada ponto do voo (decolagem, cruzeiro, escalas e pouso) em quatro categorias, emitindo um parecer final com recomendações e, opcionalmente, um relatório em PDF.
+A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking Ensemble** classifica o risco de cada ponto do voo (decolagem, cruzeiro, escalas e pouso) em três categorias (Voo Normal, Incidente, Acidente), emitindo um parecer final com recomendações e, opcionalmente, um relatório em PDF.
 
 ---
 
@@ -58,7 +58,7 @@ A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking En
 ### Análise de Voo
 - Avaliação de risco por **ponto do itinerário** (decolagens, cruzeiro, escalas intermediárias, pousos)
 - Suporte a **múltiplas escalas** com análise independente por trecho
-- **Quatro níveis de classificação** de risco: Apto Seguro, Apto Moderado, Não Apto, Inconclusivo
+- **Quatro resultados possíveis** exibidos ao usuário: "Apto para Voo — Sem Risco Identificado", "Apto para Voo — Requer Atenção", "Não Apto para Voo", "Inconclusivo — Consulte Especialista"
 - **Overrides de segurança meteorológica**: condições extremas forçam "Não Apto" independentemente do modelo
 
 ### Dados Meteorológicos
@@ -136,7 +136,7 @@ A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking En
 
 | Fonte | Descrição | Uso |
 |-------|-----------|-----|
-| **CENIPA** | Centro de Investigação e Prevenção de Acidentes Aeronáuticos — ocorrências da aviação civil brasileira (2006–2023) | Labels de treinamento (acidente, incidente, incidente grave) |
+| **CENIPA** | Centro de Investigação e Prevenção de Acidentes Aeronáuticos — ocorrências da aviação civil brasileira (2006–2023) | Labels de treinamento (acidente, incidente) + voos normais sintéticos (Classe 0) |
 | **INMET** | Instituto Nacional de Meteorologia — arquivos CSV históricos por ano/estado (2000–fev/2026) | Features meteorológicas em inferência e treinamento |
 | **Open-Meteo** | API gratuita de previsão meteorológica (até 15 dias) | Features meteorológicas para datas futuras |
 | **OurAirports** | Base de dados pública de aeroportos mundiais | Lookup de aeródromos brasileiros por cidade/estado |
@@ -169,9 +169,9 @@ A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking En
 
 **Saída:** `dados/dados_integrados/dataset_integrado.csv`
 
-**Regra de rotulagem:**
-- Dano destruído + fatalidades → Classe 3 (Acidente)
-- Dano substancial sem fatalidades → Classe 2 (Incidente Grave)
+**Regra de rotulagem (Modelo Beta 2.0 — 3 classes):**
+- Dano destruído + fatalidades → Classe 2 (Acidente)
+- Dano substancial sem fatalidades → Classe 1 (Incidente) *(fusão com Incidente Grave da v1.x)*
 - Dano leve ou nenhum → Classe 1 (Incidente)
 
 ---
@@ -203,12 +203,22 @@ A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking En
    - **13 features numéricas** → `StandardScaler`
    - **12 features binárias** → sem transformação
    - **5 features categóricas** → `OneHotEncoder` (gera ~164 colunas)
-3. **SMOTE** (Synthetic Minority Over-sampling Technique) para balanceamento de classes
-4. Divisão em treino/teste (80%/20%)
+3. **Fusão de classes** (4 → 3): Incidente Grave fundido em Incidente (Japkowicz & Stephen, 2002)
+4. **Divisão estratificada em três partições** (Varma & Simon, 2006):
+
+| Partição | Proporção | Amostras | Uso |
+|----------|-----------|----------|-----|
+| **Treino** | 80% | ~13.800 | Ajuste dos parâmetros dos modelos + SMOTE |
+| **Validação** | 15% | ~2.580 | Avaliação diagnóstica dos base learners na Fase 4 |
+| **Teste** | 5% | 909 | Avaliação definitiva do Stacking na Fase 5 — **não tocado antes** |
+
+> **Por que três partições?** Varma & Simon (2006) demonstram que usar o mesmo conjunto para selecionar e avaliar modelos introduz viés otimista mensurável. A separação rigorosa garante que a métrica final (F1 Macro 0,9069) seja uma estimativa não enviesada da capacidade de generalização.
+
+5. **SMOTE** aplicado **somente ao conjunto de treino** após o split, para não contaminar validação nem teste
 
 **Saída:**
-- `dados/dados_processados/X_treino.csv`, `X_teste.csv`
-- `dados/dados_processados/y_treino.csv`, `y_teste.csv`
+- `dados/dados_processados/X_treino.csv`, `X_val.csv`, `X_teste.csv`
+- `dados/dados_processados/y_treino.csv`, `y_val.csv`, `y_teste.csv`
 - `dados/dados_processados/pipeline_preprocessamento.joblib`
 - `dados/dados_processados/meta_features.json`
 
@@ -216,9 +226,16 @@ A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking En
 
 ### Fase 4 — Treinamento dos Modelos Base
 
-**Objetivo:** treinar e avaliar quatro modelos independentes, selecionando o melhor como modelo base.
+**Objetivo:** treinar os quatro modelos base e diagnosticar seu desempenho individual no conjunto de validação.
 
 **Script:** `pipeline/fase4_treinar_modelo.py`
+
+**Dados utilizados:**
+- Treino: `X_treino.csv` (80%, com SMOTE aplicado)
+- Avaliação: `X_val.csv` (15%) — **conjunto de validação, não o teste final**
+- Teste: `X_teste.csv` (5%) — **reservado, não acessado nesta fase**
+
+> Esta fase é **diagnóstica**: os resultados servem para inspecionar o comportamento de cada modelo, mas não são definitivos. Todos os quatro modelos são utilizados como base learners no Stacking (Fase 5) — são complementares, não competidores (Wolpert, 1992).
 
 **Modelos treinados:**
 
@@ -229,28 +246,33 @@ A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking En
 | **SVM** | Kernel RBF, `C=1.2`, `class_weight=balanced` |
 | **MLP (Rede Neural)** | 2 camadas ocultas [128, 64], ativação ReLU, solver Adam, early stopping |
 
-<!-- **Critério de seleção:** Score composto = `60% × Acurácia + 40% × F1 Macro` REMOVIDO DOS CRITÉRIOS - VERSÃO 1.2 -->
-
 **Saída:**
 - `modelos/*.joblib` (todos os modelos serializados)
-- `modelos/relatorio_fase4.txt`
+- `modelos/relatorio_fase4.txt` *(métricas são do conjunto de validação — diagnóstico)*
 
 ---
 
 ### Fase 5 — Ensemble por Stacking
 
-**Objetivo:** combinar os quatro modelos base em um meta-modelo que aprende a melhor forma de combiná-los.
+**Objetivo:** combinar os quatro modelos base em um meta-modelo e obter a avaliação definitiva no conjunto de teste isolado.
 
 **Script:** `pipeline/fase5_stacking.py`
 
+**Dados utilizados:**
+- Treino: `X_treino.csv` (80%, com SMOTE)
+- Avaliação definitiva: `X_teste.csv` (5%) — **primeiro e único acesso ao conjunto de teste**
+
 **Abordagem:**
-- **Nível 1 (Base Learners):** RF + XGBoost + SVM + MLP treinados no conjunto completo
-- **Out-of-fold predictions:** as previsões dos modelos base são geradas com **validação cruzada de 5 folds** para evitar overfitting no meta-modelo
-- **Nível 2 (Meta-Learner):** Regressão Logística multinomial (regularização `C=1.0`) treinada sobre as predições OOF
+- **Nível 1 (Base Learners):** RF + XGBoost + SVM + MLP retrainados sobre o conjunto de treino completo
+- **Mecanismo OOF interno (`cv=5`):** durante o treino do Stacking, cada base learner gera probabilidades por *out-of-fold predictions* com 5 folds **sobre o conjunto de treino** — isso alimenta o meta-learner sem data leakage. Este `cv=5` é um **mecanismo de treinamento**, não um método de avaliação.
+- **Nível 2 (Meta-Learner):** Regressão Logística multinomial (`C=1.0`) treinada sobre as predições OOF dos base learners
+- **Avaliação final:** o modelo treinado é avaliado **uma única vez** no conjunto de teste isolado (5%) — resultado definitivo e não enviesado
+
+> **Validação cruzada não é usada para avaliação final.** O `cv=5` do `StackingClassifier` opera exclusivamente dentro do conjunto de treino, com o único propósito de gerar as probabilidades que alimentam o meta-learner. A performance final é medida no conjunto de teste (909 amostras) que permaneceu intocado desde a Fase 3.
 
 **Saída:**
 - `modelos/stacking_ensemble.joblib`
-- `modelos/relatorio_fase5.txt`
+- `modelos/relatorio_fase5.txt` *(métricas são do conjunto de teste — resultado definitivo)*
 
 ---
 
@@ -277,33 +299,37 @@ A partir dessas entradas, um modelo de Machine Learning baseado em **Stacking En
 ### Arquitetura do Ensemble
 
 ```
-Entrada: Itinerário do Voo
-    ↓
-[Vetor de Features — 189 dimensões]
+TREINO (80% — X_treino.csv)
     ↓
 [Pipeline de Pré-processamento]
   StandardScaler (numéricas) + OneHotEncoder (categóricas)
+    ↓  SMOTE aplicado após o split
     ↓
-┌─────────────────────────────────────────────────────────┐
-│                   Nível 1 — Base Learners               │
-│                                                         │
-│  ┌─────────────┐  ┌──────────┐  ┌─────┐  ┌─────────┐    │
-│  │Random Forest│  │ XGBoost  │  │ SVM │  │   MLP   │    │
-│  │ 300 árvores │  │ 300 est. │  │ RBF │  │ 2 camada│    │
-│  └──────┬──────┘  └────┬─────┘  └──┬──┘  └────┬────┘    │
-│         │              │           │          │         │
-│  Out-of-Fold Predictions (5-fold Cross-Validation)      │
-└─────────┼──────────────┼────────────┼───────────┼───────┘
-          └──────────────┴────────────┴───────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│              Nível 1 — Base Learners (treinados no treino)      │
+│                                                                 │
+│  ┌─────────────┐  ┌──────────┐  ┌─────┐  ┌─────────┐          │
+│  │Random Forest│  │ XGBoost  │  │ SVM │  │   MLP   │          │
+│  │ 300 árvores │  │ 300 est. │  │ RBF │  │ 2 camada│          │
+│  └──────┬──────┘  └────┬─────┘  └──┬──┘  └────┬────┘          │
+│         │              │           │           │                │
+│  OOF Predictions (cv=5) — mecanismo interno de treino,         │
+│  não método de avaliação — opera só sobre X_treino             │
+└─────────┼──────────────┼───────────┼───────────┼───────────────┘
+          └──────────────┴───────────┴───────────┘
                          │
-            [Vetor de meta-features (4 modelos × 4 classes = 16)]
+            [Meta-features: 4 modelos × 3 classes = 12 valores]
                          ↓
-┌────────────────────────────────────────────────────────┐
-│              Nível 2 — Meta-Learner                    │
-│         Regressão Logística Multinomial (C=1.0)        │
-└────────────────────────┬───────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│              Nível 2 — Meta-Learner                            │
+│         Regressão Logística Multinomial (C=1.0)                │
+└────────────────────────┬───────────────────────────────────────┘
                          ↓
           Classe Predita + Probabilidades por Classe
+
+AVALIAÇÃO DEFINITIVA — X_teste.csv (5%, 909 amostras)
+  ↑ Tocado uma única vez, após o modelo estar completamente treinado
+  ↑ Resultado: Acurácia 93,07% | F1 Macro 0,9069 | ROC AUC 0,9842
 ```
 
 ---
@@ -358,25 +384,51 @@ Entrada: Itinerário do Voo
 
 ### Classes de Saída
 
-| Classe |      Label      | Descrição                                                         |
-|--------|-----------------|-------------------------------------------------------------------|
-| **0**  | Voo Normal      | Nenhuma ocorrência prevista — voo dentro dos padrões de segurança |
-| **1**  | Incidente       | Ocorrência com dano leve; segurança preservada mas com desvio     |
-| **2**  | Incidente Grave | Ocorrência com risco real para aeronave ou tripulantes            |
-| **3**  | Acidente        | Ocorrência com dano substancial, destruição ou fatalidades        |
+> **Uso interno:** as classes abaixo são a saída bruta do modelo de ML. Elas não são exibidas diretamente ao usuário — são traduzidas internamente em status operacionais e depois em mensagens de resultado (veja "Lógica de Status" abaixo).
+
+| Classe |   Label Interno   | Descrição                                                                   |
+|--------|-------------------|-----------------------------------------------------------------------------|
+| **0**  | Voo Normal        | Nenhuma ocorrência prevista — voo dentro dos padrões de segurança           |
+| **1**  | Incidente         | Ocorrência com dano leve a substancial; desvio de segurança sem fatalidades |
+| **2**  | Acidente          | Ocorrência com dano severo, destruição ou fatalidades                       |
 
 ---
 
 ### Lógica de Status e Overrides de Segurança
 
-O sistema converte as classes do modelo em **4 status operacionais**:
+O sistema opera em **três camadas distintas** entre a saída do modelo e o que o usuário vê:
+
+#### Camada 1 — Classes do Modelo ML (interna)
+
+Saída bruta do Stacking Ensemble. Nunca exibida diretamente ao usuário.
+
+| Classe | Label | Descrição |
+|--------|-------|-----------|
+| **0** | Voo Normal | Perfil compatível com voos sem ocorrência registrada |
+| **1** | Incidente  | Perfil compatível com desvios de segurança sem fatalidades |
+| **2** | Acidente   | Perfil compatível com ocorrências com dano severo ou fatalidades |
+
+#### Camada 2 — Status Operacional (interno)
+
+Tradução da classe do modelo em código de status. Usado pela lógica de overrides, persistência no banco de dados e API interna. Aparece também em forma abreviada nos *badges* da página de Registros ("Apto Seguro", "Apto Moderado", "Não Apto", "Inconclusivo").
 
 |     Status      |   Cor    |      Critério      |
 |-----------------|----------|--------------------|
 | `APTO_SEGURO`   | Verde    | Classe 0 com confiança ≥ 90% |
 | `APTO_MODERADO` | Laranja  | Classe 1 (qualquer confiança) ou limítrofe |
-| `NAO_APTO`      | Vermelho | Classe 2 ou 3      |
-| `INCONCLUSIVO`  | Cinza    | Confiança máxima < 42% **ou** Classe 3 com ≥ 60% de probabilidade com meteorologia completamente segura (contradição detectada) **ou** dados meteorológicos reais indisponíveis (análise com medianas históricas) |
+| `NAO_APTO`      | Vermelho | Classe 2 |
+| `INCONCLUSIVO`  | Cinza    | Confiança máxima < 42% **ou** Classe 2 com ≥ 60% de probabilidade com meteorologia completamente segura (contradição detectada) **ou** dados meteorológicos reais indisponíveis (análise com medianas históricas) |
+
+#### Camada 3 — Mensagem Exibida ao Usuário
+
+O que o piloto ou operador vê na tela de resultado da análise. A mensagem corresponde ao status operacional após a aplicação de todos os overrides.
+
+| Status Operacional | Mensagem ao Usuário |
+|-------------------|---------------------|
+| `APTO_SEGURO`     | **Apto para Voo — Sem Risco Identificado** |
+| `APTO_MODERADO`   | **Apto para Voo — Requer Atenção** |
+| `NAO_APTO`        | **Não Apto para Voo** |
+| `INCONCLUSIVO`    | **Inconclusivo — Consulte Especialista** |
 
 **Overrides de Segurança Meteorológica** — aplicados após a predição do modelo, somente quando dados meteorológicos reais estão disponíveis (INMET ou Open-Meteo). Organizados em dois níveis:
 
@@ -410,23 +462,25 @@ O sistema converte as classes do modelo em **4 status operacionais**:
 
 |         Métrica          | Valor  |
 |--------------------------|--------|
-| **Acurácia**             | 87,54%  |
-| **F1 Macro**             | 0,7428 |
-| **F1 Weighted**          | 0,8753 |
-| **ROC AUC**              | 0,95,07|
-| **Tempo de Treinamento** | ~17 minutos (991 segundos) |
+| **Acurácia**             | 93,07% |
+| **F1 Macro**             | 0,9069 |
+| **F1 Weighted**          | 0,9315 |
+| **ROC AUC**              | 0,9842 |
+| **Tempo de Treinamento** | ~7 minutos (403 segundos) |
 | **SMOTE Aplicado**       | Sim    |
 | **Passthrough**          | Não (`passthrough=False`) |
-| **Data de Treinamento**  | 19/04/2026 |
+| **Classes**              | 3 (Voo Normal, Incidente, Acidente) |
+| **Split**                | 80% treino / 15% validação / 5% teste |
+| **Data de Treinamento**  | 09/05/2026 |
 
-**Distribuição do conjunto de teste:**
+**Distribuição do conjunto de teste (5%):**
 
-|        Classe       | Amostras |
-|---------------------|----------|
-| 0 — Normal          |  1.000   |
-| 1 — Incidente       |  1.827   |
-| 2 — Incidente Grave |  248     |
-| 3 — Acidente        |  560     |
+|     Classe      | Amostras | Precisão | Recall | F1   |
+|-----------------|----------|----------|--------|------|
+| 0 — Voo Normal  |   250    |   1,00   |  1,00  | 1,00 |
+| 1 — Incidente   |   519    |   0,95   |  0,93  | 0,94 |
+| 2 — Acidente    |   140    |   0,76   |  0,81  | 0,78 |
+| **Total**       | **909**  |          |        |      |
 
 ---
 
@@ -602,7 +656,7 @@ Desenvolvimento/
 │       └── js/main.js                 # Lógica frontend (679 linhas)
 │
 ├── modelos/                           # Modelos treinados e serializados
-│   ├── stacking_ensemble.joblib       # Modelo final (produção — v1.6)
+│   ├── stacking_ensemble.joblib       # Modelo final (produção — beta-2.0)
 │   ├── melhor_modelo.joblib           # Melhor modelo individual (Fase 4)
 │   ├── random_forest.joblib
 │   ├── xgboost.joblib

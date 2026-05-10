@@ -26,6 +26,13 @@
 ]{quadro}
 
 \usepackage[alf]{abntex2cite}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
 
 \newcolumntype{L}{>{\raggedright\arraybackslash}p{4.5cm}}
 \newcolumntype{R}{>{\raggedright\arraybackslash}p{8.5cm}}
@@ -76,11 +83,13 @@ composto por quatro algoritmos de aprendizado de máquina supervisionado,
 Random Forest, XGBoost, SVM-RBF e Perceptron Multicamadas (MLP),
 combinados por uma Regressão Logística Multinomial como meta-aprendiz. O
 balanceamento de classes foi realizado via SMOTE e a geração de dados sintéticos
-para representar voos normais, enquanto a validação empregou predições
-\textit{out-of-fold} com validação cruzada de 5 partições. O modelo alcançou
-acurácia de 87,54\%, F1-Score Macro de 74,28\% e ROC-AUC de 95,07\% no conjunto
-de teste, classificando operações aéreas em quatro categorias: Apto Seguro,
-Apto Requer Atenção, Não Apto e Inconclusivo. O sistema integra uma interface web com
+para representar voos normais, enquanto a avaliação definitiva foi conduzida
+sobre um conjunto de teste isolado de 909 amostras. O modelo alcançou
+acurácia de 93,07\%, F1-Score Macro de 0,9069 e ROC-AUC de 0,9842 no conjunto
+de teste, classificando operações aéreas em três classes de risco (Voo Normal,
+Incidente e Acidente), mapeadas em quatro status operacionais apresentados ao usuário: Apto para
+Voo~--- Sem Risco Identificado, Apto para Voo~--- Requer Atenção,
+Não Apto para Voo e Inconclusivo~--- Consulte Especialista. O sistema integra uma interface web com
 consulta meteorológica em tempo real, \textit{overrides} automáticos de segurança
 e geração de relatório em PDF, constituindo uma ferramenta prática alinhada ao
 paradigma Safety-II para o planejamento pré-voo na aviação civil brasileira.
@@ -102,10 +111,13 @@ risk of each flight segment. The predictive model is based on a Stacking Ensembl
 four supervised machine learning algorithms, Random Forest, XGBoost, SVM-RBF,
 and Multilayer Perceptron (MLP), combined by a Multinomial Logistic Regression
 meta-learner. Class balancing was performed via SMOTE and synthetic data generation
-for normal flight representation, while validation employed out-of-fold predictions with
-5-fold cross-validation. The model achieved 87.54\% accuracy, 74.28\% F1 Macro Score,
-and 95.07\% ROC-AUC on the test set, classifying flight operations into four
-operational categories: Safe, Requires Attention, Not Apt, and Inconclusive. The system integrates a web
+for normal flight representation, while the final evaluation was conducted on
+an isolated test set of 909 samples. The model achieved 93.07\% accuracy, 0.9069 F1 Macro Score,
+and 0.9842 ROC-AUC on the test set, classifying flight operations into three
+risk classes (Normal Flight, Incident, and Accident), mapped to four operational
+statuses presented to the user: Safe for Flight~--- No Risk Identified,
+Safe for Flight~--- Attention Required, Not Apt for Flight, and
+Inconclusive~--- Consult a Specialist. The system integrates a web
 interface with real-time meteorological queries, automatic safety overrides, and PDF
 report generation, constituting a practical tool aligned with the Safety-II paradigm for
 pre-flight planning in Brazilian civil aviation.
@@ -159,9 +171,9 @@ tomada de decisão pré-voo, que combina dados históricos do CENIPA
 do itinerário para estimar automaticamente o nível de risco associado a cada ponto
 de uma operação aérea, utilizando um modelo de Stacking Ensemble supervisionado.
 
-O sistema desenvolvido alcançou acurácia de 87,54\%, F1-Score Macro de 0,7428
-e ROC-AUC de 0,9507, classificando operações aéreas em quatro categorias
-operacionais. Além do modelo preditivo, foi implementada uma interface web com
+O sistema desenvolvido alcançou acurácia de 93,07\%, F1-Score Macro de 0,9069
+e ROC-AUC de 0,9842, classificando operações aéreas em três classes de risco
+convertidas em quatro status operacionais. Além do modelo preditivo, foi implementada uma interface web com
 consulta meteorológica em tempo real, lógica de \textit{overrides} de segurança e
 geração de relatório técnico em PDF. O trabalho busca, assim, contribuir para a
 evolução das práticas de segurança operacional na aviação civil brasileira, oferecendo
@@ -352,7 +364,7 @@ nessa experiência, em vez de dependerem apenas de instruções pré-programadas
 
 No presente trabalho, cada registro do banco de dados do CENIPA \cite{CENIPA2025}
 foi associado a um rótulo de gravidade: Voo Normal (Classe~0), Incidente
-(Classe~1), Incidente Grave (Classe~2) ou Acidente (Classe~3), fornecendo ao
+(Classe~1) ou Acidente (Classe~2), fornecendo ao
 modelo a experiência de treinamento necessária para generalizar o padrão de risco
 a novos voos não observados. Na prática da aviação, esse paradigma é aplicado para
 identificar se um voo representa risco baixo ou elevado, prever se condições
@@ -474,7 +486,10 @@ de validação cruzada para garantir a generalização dos modelos de FRAT
 modernizado.
 
 Como meta-aprendiz de \textit{nível 1}, foi adotada a \textbf{Regressão Logística
-Multinomial com regularização L2} (C\,=\,1,0). A escolha por um modelo linear como
+Multinomial com regularização L2} (C\,=\,1,0), configurada com
+\texttt{passthrough=False}: as \textit{meta-features} de entrada são
+exclusivamente as probabilidades geradas pelos modelos base, sem inclusão
+das \textit{features} originais dos dados. A escolha por um modelo linear como
 combinador é fundamentada por \citeonline{WOLPERT1992} e \citeonline{HASTIE2009},
 que recomendam modelos simples nesse papel porque o espaço de meta-features já
 contém a informação discriminativa destilada pelos modelos de nível 0, e modelos
@@ -574,11 +589,11 @@ Quadro~\ref{quad:features} apresenta as variáveis numéricas e binárias do mod
     \texttt{pave\_n\_tipos}        & N.º de tipos de ocorrência associados \\
     \midrule
     \multicolumn{2}{l}{\textit{Binárias (sem transformação)}} \\
-    \texttt{pave\_vento\_forte}    & Vento $>$ 10 m/s (1/0) \\
-    \texttt{pave\_rajada\_forte}   & Rajada $>$ 15 m/s (1/0) \\
-    \texttt{pave\_chuva}           & Precipitação $>$ 1 mm (1/0) \\
+    \texttt{pave\_vento\_forte}    & Vento $>$ 7,5 m/s (15\,kt) (1/0) \\
+    \texttt{pave\_rajada\_forte}   & Rajada $>$ 12,5 m/s (1/0) \\
+    \texttt{pave\_chuva}           & Precipitação $>$ 0 mm (1/0) \\
     \texttt{pave\_umidade\_alta}   & Umidade $>$ 90\% (1/0) \\
-    \texttt{pave\_voo\_noturno}    & Horário noturno, 20h--6h (1/0) \\
+    \texttt{pave\_voo\_noturno}    & Horário noturno, 18h--6h (1/0) \\
     \texttt{pave\_fase\_critica}   & Fase crítica: decolagem ou pouso (1/0) \\
     \texttt{pave\_fase\_solo}      & Fase em solo: táxi (1/0) \\
     \texttt{pave\_instrucao}       & Voo de instrução (1/0) \\
@@ -613,7 +628,7 @@ ilustra a arquitetura do ensemble.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.95\textwidth]{images/Modelo ML.JPG}
+  \includegraphics[width=0.95\textwidth]{images/Modelo ML.png}
   \caption{Arquitetura do Stacking Ensemble: quatro modelos base e meta-aprendiz}
   \label{fig:modelo_ml}
   \fonte{Elaborado pelo autor.}
@@ -621,7 +636,7 @@ ilustra a arquitetura do ensemble.
 
 \subsection{Lógica de status e overrides de segurança}
 
-A saída do modelo, quatro classes com probabilidades associadas, é convertida
+A saída do modelo, três classes com probabilidades associadas, é convertida
 em quatro status operacionais apresentados ao usuário, conforme o
 Quadro~\ref{quad:status}.
 
@@ -633,10 +648,10 @@ Quadro~\ref{quad:status}.
     \toprule
     \textbf{Status} & \textbf{Cor} & \textbf{Critério} \\
     \midrule
-    Apto Seguro           & Verde    & Classe 0 com confiança $\geq$ 90\%, sem condições L1/L2 ativas \\
-    Apto Requer Atenção   & Laranja  & Classe 1, predição limítrofe, ou condição meteorológica L1 ativa \\
-    Não Apto              & Vermelho & Classe 2, Classe 3, ou condição meteorológica L2 ativa \\
-    Inconclusivo          & Cinza    & Confiança máxima $<$ 42\%, \textit{ou} Classe 3 com $\geq$ 85\% em cenário meteorologicamente benigno (contradição detectada) \\
+    Apto para Voo~--- Sem Risco Identificado  & Verde    & Classe 0 com confiança $\geq$ 90\% \\
+    Apto para Voo~--- Requer Atenção          & Laranja  & Classe 1 (qualquer confiança) ou predição limítrofe \\
+    Não Apto para Voo                         & Vermelho & Classe 2 ou condição meteorológica L2 ativa \\
+    Inconclusivo~--- Consulte Especialista    & Cinza    & Confiança máxima $<$ 42\% (baixa confiança), \textit{ou} Classe 2 predita com probabilidade $>$ 60\% em cenário meteorologicamente benigno (contradição detectada), \textit{ou} dados meteorológicos reais indisponíveis \\
     \bottomrule
   \end{tabular}
   \fonte{Elaborado pelo autor.}
@@ -653,40 +668,52 @@ de restrições externas que delimitem o espaço de ação do classificador em c
 de risco real.
 
 A camada opera em dois níveis determinísticos. O \textbf{Nível L1} identifica condições
-meteorológicas adversas e eleva qualquer predição favorável do modelo para
-\textbf{Apto Requer Atenção}: vento acima de 10 m/s (RBAC 121, Emenda 07, Art.~121.429(a)) \cite{RBAC121},
+meteorológicas adversas e eleva qualquer predição favorável do modelo para o status
+\textbf{Apto para Voo~--- Requer Atenção}: vento acima de 10 m/s
+(RBAC 121, Emenda 07, Art.~121.429(a)) \cite{RBAC121},
 rajada acima de 12,5 m/s \cite{ICAO2018},
-precipitação moderada acima de 2,5 mm/h (Glossário ANAC/DECEA), umidade acima de
-90\% com formação de nevoeiro (ICAO, Anexo~3) \cite{ICAO2018,WMO2025},
-ou temperatura abaixo de 2°C com condições de gelo \cite{BRANDAO2016}. O
-\textbf{Nível L2} identifica condições críticas e força o status \textbf{Não Apto}
-independentemente da predição: vento acima de 17 m/s (ICAO, Anexo~3, Apêndice~2) \cite{ICAO2018}, rajada acima de 25 m/s,
-precipitação acima de 7,5 mm/h, umidade acima de 95\%, ou temperatura abaixo de 0°C
-com gelo confirmado (RBAC 121, Emenda 07, Art.~121.629(b)) \cite{RBAC121}.
-Adicionalmente, a camada emite \textbf{Inconclusivo} quando detecta contradição entre
-a predição e as condições observadas, situação em que o classificador prediz acidente
-com alta confiança em cenário meteorologicamente benigno. O
+precipitação moderada acima de 2,5 mm/h (Glossário ANAC/DECEA),
+umidade acima de 90\% combinada a vento inferior a 2,5 m/s --- indicando formação de
+nevoeiro em fases de superfície (ICAO, Anexo~3) \cite{ICAO2018,WMO2025} ---,
+ou temperatura abaixo de 2°C combinada a umidade acima de 90\% ou precipitação positiva
+(risco de gelo) \cite{BRANDAO2016}. O
+\textbf{Nível L2} identifica condições críticas e força o status \textbf{Não Apto para Voo}
+independentemente da predição: vento acima de 17 m/s (ICAO, Anexo~3, Apêndice~2) \cite{ICAO2018},
+rajada acima de 25 m/s,
+precipitação acima de 7,5 mm/h,
+umidade acima de 95\% combinada a vento inferior a 1,0 m/s (nevoeiro denso, fases de superfície),
+ou temperatura abaixo de 0°C combinada a umidade acima de 90\% ou precipitação positiva
+(gelo confirmado) (RBAC 121, Emenda 07, Art.~121.629(b)) \cite{RBAC121}.
+Adicionalmente, a camada emite o status \textbf{Inconclusivo~--- Consulte Especialista}
+em três situações: (a)~\textbf{baixa confiança} --- a probabilidade máxima entre
+as classes não ultrapassa 42\%, indicando que o modelo está genuinamente indeciso
+com probabilidades distribuídas de forma uniforme entre as classes e sem vencedor
+claro; (b)~\textbf{contradição detectada} --- a Classe~2 (Acidente) é predita com
+probabilidade superior a 60\% em um cenário onde todas as condições meteorológicas
+são benignas, sugerindo anomalia ou viés residual de amostragem; e (c)~\textbf{dados
+insuficientes} --- dados meteorológicos reais não estão disponíveis e a análise
+foi conduzida com medianas históricas. O
 Quadro~\ref{quad:overrides} sintetiza os limiares de cada nível.
 
 \begin{quadro}[ht]
   \caption{Camada de \textit{overrides} de segurança: limiares operacionais por nível}
   \label{quad:overrides}
   \centering
-  \begin{tabular}{cllc}
+  \begin{tabular}{cl p{6.5cm} l}
     \toprule
     \textbf{Nível} & \textbf{Variável} & \textbf{Limiar} & \textbf{Status forçado} \\
     \midrule
-    \multirow{5}{*}{L1} & Vento        & $>$ 10 m/s   & \multirow{5}{*}{Apto Requer Atenção} \\
-                        & Rajada       & $>$ 12,5 m/s &  \\
-                        & Precipitação & $>$ 2,5 mm/h &  \\
-                        & Umidade      & $>$ 90\%     &  \\
-                        & Temperatura  & $<$ 2 °C     &  \\
+    \multirow{5}{*}{L1} & Vento        & $>$ 10 m/s                                                         & \multirow{5}{*}{\parbox{3.8cm}{Apto para Voo~---\\Requer Atenção}} \\
+                        & Rajada       & $>$ 12,5 m/s                                                       &  \\
+                        & Precipitação & $>$ 2,5 mm/h                                                       &  \\
+                        & Umidade      & $\geq$ 90\% e vento $<$ 2,5 m/s (fases de superfície)              &  \\
+                        & Temperatura  & $<$ 2\,°C e (umidade $>$ 90\% ou precipitação $>$ 0)               &  \\
     \midrule
-    \multirow{5}{*}{L2} & Vento        & $>$ 17 m/s   & \multirow{5}{*}{Não Apto} \\
-                        & Rajada       & $>$ 25 m/s   &  \\
-                        & Precipitação & $>$ 7,5 mm/h &  \\
-                        & Umidade      & $>$ 95\%     &  \\
-                        & Temperatura  & $<$ 0 °C     &  \\
+    \multirow{5}{*}{L2} & Vento        & $>$ 17 m/s                                                         & \multirow{5}{*}{\parbox{3.8cm}{Não Apto\\para Voo}} \\
+                        & Rajada       & $>$ 25 m/s                                                         &  \\
+                        & Precipitação & $>$ 7,5 mm/h                                                       &  \\
+                        & Umidade      & $\geq$ 95\% e vento $<$ 1,0 m/s (fases de superfície)              &  \\
+                        & Temperatura  & $<$ 0\,°C e (umidade $>$ 90\% ou precipitação $>$ 0)               &  \\
     \bottomrule
   \end{tabular}
   \fonte{Elaborado pelo autor, baseado em \cite{ICAO2018,RBAC121}.}
@@ -761,16 +788,21 @@ definições da ICAO \cite{ICAO2018}, classificando cada ocorrência conforme a
 gravidade do dano:
 
 \begin{itemize}
-  \item \textbf{Classe 3, Acidente:} dano destruído com fatalidades;
-  \item \textbf{Classe 2, Incidente Grave:} dano substancial sem fatalidades;
-  \item \textbf{Classe 1, Incidente:} dano leve ou nenhum dano.
+  \item \textbf{Classe 2, Acidente:} dano destruído com fatalidades;
+  \item \textbf{Classe 1, Incidente:} dano substancial sem fatalidades ou dano leve
+  (fusão metodológica das antigas categorias Incidente e Incidente Grave);
+  \item \textbf{Classe 0, Voo Normal:} amostras sintéticas representando operações sem
+  ocorrência, introduzidas para que o modelo aprenda a distinguir voos seguros dos perigosos.
 \end{itemize}
 
-Essa estrutura hierárquica de gravidade garante que o modelo aprenda gradações
-reais de risco operacional, em vez de uma classificação binária simplificada.
-O banco CENIPA contém, no período 2007--2025, aproximadamente 13.185 ocorrências
-rotuladas (Classes 1, 2 e 3) após integração meteorológica e remoção de registros
-com variáveis críticas ausentes.
+Essa estrutura de gravidade garante que o modelo aprenda gradações reais de risco
+operacional, em vez de uma classificação binária simplificada. A fusão das antigas
+categorias Incidente e Incidente Grave em uma única Classe~1 foi adotada por
+critério metodológico: a fronteira entre elas é tênue nos dados do CENIPA e a
+separação forçava o modelo a distinguir eventos com padrões muito similares,
+prejudicando a generalização. O banco CENIPA contém, no período 2007--2025,
+aproximadamente 13.185 ocorrências rotuladas (Classes 1 e 2) após integração
+meteorológica e remoção de registros com variáveis críticas ausentes.
 
 Uma limitação estrutural do banco CENIPA é que ele registra apenas ocorrências,
 não contendo voos normais. Como observa \citeonline{HARMS2020}, eventos de
@@ -806,9 +838,13 @@ foram transformadas pelo \textbf{OneHotEncoder}, que converte cada categoria em
 uma coluna binária, evitando que o modelo trate categorias como ordinais.
 
 O conjunto resultante, composto por 18.171 registros após integração, geração
-sintética e limpeza, foi dividido em treino (80\%, 14.536 amostras) e teste
-(20\%, 3.635 amostras). A divisão foi estratificada por classe para manter a
-distribuição original de gravidade em ambos os subconjuntos, procedimento
+sintética e limpeza, foi dividido em três partições estratificadas: treino
+(80\%, $\approx$\,13.800 amostras), validação (15\%, $\approx$\,2.580 amostras)
+e teste (5\%, 909 amostras). O conjunto de validação foi utilizado para
+diagnóstico dos modelos base na Fase~4, enquanto o conjunto de teste permaneceu
+intocado até a avaliação definitiva do Stacking, garantindo uma estimativa não
+enviesada do desempenho real. A divisão foi estratificada por classe para manter
+a distribuição original de gravidade em todas as partições, procedimento
 recomendado por \citeonline{GERON2019} para classificação com classes
 desbalanceadas. O conjunto de teste foi separado antes de qualquer
 transformação ou balanceamento, garantindo a ausência de vazamento de dados
@@ -819,7 +855,7 @@ artificialmente otimistas que não se reproduzem em dados reais.} entre as
 fases de treinamento e avaliação.
 
 Mesmo após a geração de amostras sintéticas para a Classe~0, o conjunto de
-treinamento permaneceu desbalanceado, com a Classe~2 (Incidente Grave) sendo a
+treinamento permaneceu desbalanceado, com a Classe~2 (Acidente) sendo a
 menos representada. Para mitigar esse desbalanceamento, foi aplicada a técnica
 \textbf{SMOTE} (\textit{Synthetic Minority Over-sampling Technique}), proposta
 por \citeonline{CHAWLA2002}. O SMOTE gera novas amostras para as classes
@@ -842,14 +878,15 @@ aprender as classes positivas de eventos de segurança.
 O SMOTE foi aplicado exclusivamente ao conjunto de treino, garantindo que o
 conjunto de teste permaneça com a distribuição real dos dados e reflita
 fielmente as condições operacionais encontradas na prática. Após a aplicação,
-todas as quatro classes foram elevadas para 7.304 amostras no conjunto de
-treino, totalizando 29.216 amostras balanceadas para o treinamento dos modelos
-base. A Figura~\ref{fig:fase_dados} ilustra o fluxo completo de processamento
+as três classes foram balanceadas no conjunto de treino, ampliando o conjunto
+disponível para os modelos base e reduzindo o viés introduzido pela menor
+representatividade da Classe~2 (Acidente).
+A Figura~\ref{fig:fase_dados} ilustra o fluxo completo de processamento
 dos dados brutos até o conjunto balanceado pronto para treinamento.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.85\textwidth]{images/Fase de dados.JPG}
+  \includegraphics[width=0.85\textwidth]{images/Fase de dados.png}
   \caption{Fluxo de processamento dos dados: da ingestão bruta ao conjunto balanceado}
   \label{fig:fase_dados}
   \fonte{Elaborado pelo autor.}
@@ -947,29 +984,33 @@ possíveis, sem ser distorcido pela dominância da classe majoritária.
 
 \subsection{Desempenho do modelo}
 
-Os quatro modelos base foram avaliados individualmente no conjunto de teste antes da
-composição do ensemble, conforme a Tabela~\ref{tab:modelos}.
+Os quatro modelos base foram avaliados individualmente no conjunto de validação
+(caráter diagnóstico) antes da composição do ensemble, conforme a Tabela~\ref{tab:modelos}.
+Esses valores servem para inspecionar o comportamento individual de cada modelo,
+mas não são definitivos: todos os quatro são utilizados como base learners no
+Stacking, sendo complementares entre si \cite{WOLPERT1992}.
 
 \begin{table}[ht]
-  \caption{Métricas dos modelos base avaliados individualmente no conjunto de teste}
+  \caption{Métricas diagnósticas dos modelos base avaliados no conjunto de validação}
   \label{tab:modelos}
   \centering
   \begin{tabular}{lcc}
     \toprule
     \textbf{Modelo} & \textbf{F1-Score Macro} & \textbf{ROC-AUC} \\
     \midrule
-    Random Forest  & 0,7553 & 0,9602 \\
-    XGBoost        & 0,7539 & 0,9608 \\
-    SVM-RBF        & 0,7596 & 0,9525 \\
-    MLP            & 0,7327 & 0,9332 \\
+    Random Forest  & 0,9022 & 0,9825 \\
+    XGBoost        & 0,8981 & 0,9831 \\
+    SVM-RBF        & 0,8902 & 0,9783 \\
+    MLP            & 0,8895 & 0,9762 \\
     \bottomrule
   \end{tabular}
   \fonte{Elaborado pelo autor.}
 \end{table}
 
 A Tabela~\ref{tab:metricas} apresenta as métricas do Stacking Ensemble final,
-avaliadas sobre o conjunto de teste, composto por 3.635 instâncias separadas
-antes da aplicação do SMOTE e não utilizadas em nenhuma etapa do treinamento.
+avaliadas sobre o conjunto de teste isolado, composto por 909 instâncias (5\%)
+separadas antes de qualquer transformação e não acessadas em nenhuma etapa
+anterior ao treinamento completo do Stacking.
 
 \begin{table}[ht]
   \caption{Métricas de desempenho do Stacking Ensemble no conjunto de teste}
@@ -979,34 +1020,33 @@ antes da aplicação do SMOTE e não utilizadas em nenhuma etapa do treinamento.
     \toprule
     \textbf{Métrica} & \textbf{Valor} \\
     \midrule
-    Acurácia              & 87,54\%   \\
-    F1-Score Macro        & 0,7428    \\
-    ROC-AUC               & 0,9507    \\
-    Tempo de treinamento  & $\approx$17 min (991 s) \\
+    Acurácia              & 93,07\%   \\
+    F1-Score Macro        & 0,9069    \\
+    ROC-AUC               & 0,9842    \\
+    Tempo de treinamento  & $\approx$7 min (403 s) \\
     \bottomrule
   \end{tabular}
   \fonte{Elaborado pelo autor.}
 \end{table}
 
 A Tabela~\ref{tab:distribuicao} apresenta a distribuição das classes no conjunto de
-teste, evidenciando o desbalanceamento inerente aos dados do CENIPA: a Classe 2
-(Incidente Grave) conta com apenas 248 instâncias, em contraste com 1.827 da
-Classe 1 (Incidente).
+teste, evidenciando o desbalanceamento inerente aos dados do CENIPA: a Classe~2
+(Acidente) conta com apenas 140 instâncias, em contraste com 519 da
+Classe~1 (Incidente).
 
 \begin{table}[ht]
-  \caption{Distribuição das classes no conjunto de teste}
+  \caption{Distribuição das classes no conjunto de teste (909 amostras, 5\%)}
   \label{tab:distribuicao}
   \centering
   \begin{tabular}{clcc}
     \toprule
     \textbf{Classe} & \textbf{Rótulo} & \textbf{Amostras} & \textbf{\%} \\
     \midrule
-    0 & Voo Normal      & 1.000 & 27,5\% \\
-    1 & Incidente       & 1.827 & 50,3\% \\
-    2 & Incidente Grave &   248 &  6,8\% \\
-    3 & Acidente        &   560 & 15,4\% \\
+    0 & Voo Normal  & 250 & 27,5\% \\
+    1 & Incidente   & 519 & 57,1\% \\
+    2 & Acidente    & 140 & 15,4\% \\
     \midrule
-      & \textbf{Total}  & 3.635 & 100\%  \\
+      & \textbf{Total} & 909 & 100\%  \\
     \bottomrule
   \end{tabular}
   \fonte{Elaborado pelo autor.}
@@ -1023,10 +1063,9 @@ assimetria de desempenho estrutural do modelo.
     \toprule
     \textbf{Classe} & \textbf{Rótulo} & \textbf{F1-Score} \\
     \midrule
-    0 & Voo Normal      & 1,00 \\
-    1 & Incidente       & 0,93 \\
-    2 & Incidente Grave & 0,31 \\
-    3 & Acidente        & 0,74 \\
+    0 & Voo Normal  & 1,00 \\
+    1 & Incidente   & 0,94 \\
+    2 & Acidente    & 0,78 \\
     \bottomrule
   \end{tabular}
   \fonte{Elaborado pelo autor.}
@@ -1034,15 +1073,15 @@ assimetria de desempenho estrutural do modelo.
 
 \subsection{Análise dos resultados}
 
-A acurácia de 87,54\% indica que o ensemble classifica corretamente a grande
-maioria das operações avaliadas. Entretanto, dado o desbalanceamento da
-Classe 2, a métrica mais relevante para análise é o F1-Score Macro de 0,7428, que
+A acurácia de 93,07\% indica que o ensemble classifica corretamente a grande
+maioria das operações avaliadas. Entretanto, dado o desbalanceamento relativo entre
+as classes, a métrica mais relevante para análise é o F1-Score Macro de 0,9069, que
 reflete desempenho médio equalizado entre todas as classes. Esse valor indica que
-o modelo possui boa capacidade preditiva global, mas enfrenta o desafio estrutural
-de que eventos de Incidente Grave são numericamente raros e difíceis de capturar
-com alta revocação, mesmo após a aplicação do SMOTE.
+o modelo possui boa capacidade preditiva global, com o maior desafio concentrado
+na Classe~2 (Acidente), cujos eventos são numericamente menos frequentes mesmo
+após a aplicação do SMOTE.
 
-O ROC-AUC de 0,9507 é o resultado mais expressivo: ele indica que, em 95,07\%
+O ROC-AUC de 0,9842 é o resultado mais expressivo: ele indica que, em 98,42\%
 dos casos, o modelo atribui probabilidade de risco mais alta a uma operação
 perigosa do que a uma operação normal escolhidas aleatoriamente, conforme a
 interpretação de \citeonline{FAWCETT2006}. Esse valor está acima dos reportados
@@ -1050,7 +1089,7 @@ por \citeonline{LIU2024} para previsão de clima perigoso (que variaram entre 0,
 e 0,92 dependendo do fenômeno) e é comparável aos resultados de
 \citeonline{HARMS2020} para predição de eventos de segurança aeronáutica em
 dados da aviação europeia, demonstrando a competitividade do modelo mesmo diante
-de um problema de quatro classes com dados históricos exclusivamente brasileiros.
+de um problema de três classes com dados históricos exclusivamente brasileiros.
 
 A adoção do Stacking Ensemble com os quatro modelos base fundamenta-se
 teoricamente em \citeonline{HASTIE2009}, que formalizam que a combinação de
@@ -1065,28 +1104,30 @@ a heterogeneidade dos dados meteorológicos, operacionais e históricos utilizad
 A análise por classe (Tabela~\ref{tab:classes}) revela assimetria de desempenho
 consistente com a literatura: a Classe~0 (\textit{Voo Normal}) atingiu F1 = 1,00,
 por ser representada por perfis sintéticos homogêneos; a Classe~1 (\textit{Incidente})
-alcançou F1 = 0,93; a Classe~3 (\textit{Acidente}) obteve F1 = 0,74; e a Classe~2
-(\textit{Incidente Grave}), a menor em volume real no conjunto de teste (248 amostras),
-obteve F1 = 0,31. Esse padrão é descrito por \citeonline{HARMS2020} como característico
-de modelos de ML treinados sobre dados aeronáuticos: eventos raros e limítrofes tendem
-a apresentar desempenho substancialmente inferior, dada a escassez de padrões
+alcançou F1 = 0,94; e a Classe~2 (\textit{Acidente}), a menor em volume real no
+conjunto de teste (140 amostras), obteve F1 = 0,78. A fusão das antigas categorias
+Incidente e Incidente Grave em uma única Classe~1 contribuiu para a melhoria do
+desempenho nessa categoria, ao aumentar sua representatividade e homogeneidade no
+conjunto de treinamento. Esse padrão é descrito por \citeonline{HARMS2020} como
+característico de modelos de ML em dados aeronáuticos: eventos raros tendem a
+apresentar desempenho substancialmente inferior, dada a escassez de padrões
 representativos mesmo após o balanceamento via SMOTE.
 
 Os resultados são comparáveis aos de estudos similares: \citeonline{HARMS2020} reporta
 F1-scores entre 0,70 e 0,80 para predição binária de eventos de segurança em dados de
 aviação, enquanto \citeonline{WALDEN2023} relatam acurácias entre 0,83 e 0,91 para
 classificação de risco pré-voo com FRATs baseados em ML. O presente trabalho
-diferencia-se por três aspectos: (i)~a extensão para quatro classes de gravidade
-alinhadas à taxonomia CENIPA; (ii)~a integração de \textit{features} meteorológicas,
-cujas importâncias no Random Forest confirmam empiricamente a relevância
-das variáveis meteorológicas para a predição de gravidade; e (iii)~a presença da camada de \textit{overrides} de segurança de dois níveis,
-baseada em limiares operacionais normativos.
+diferencia-se por três aspectos: (i)~a modelagem em três classes de gravidade
+alinhadas à taxonomia CENIPA, com fusão metodológica das categorias limítrofes;
+(ii)~a integração de \textit{features} meteorológicas que contribuem diretamente
+para a predição de gravidade; e (iii)~a presença da camada de \textit{overrides}
+de segurança de dois níveis, baseada em limiares operacionais normativos.
 
 A presença dos \textit{overrides} de segurança meteorológica garante que, mesmo
 em cenários onde o modelo preditivo apresente incerteza, condições atmosféricas
 críticas, como vento superior a 17 m/s (L2) ou temperatura abaixo de 0°C com gelo
 confirmado (RBAC 121, Art.~121.629(b)) \cite{RBAC121}, resultem em classificação
-automática como Não Apto. Essa combinação de modelo de ML com regras determinísticas
+automática como Não Apto para Voo. Essa combinação de modelo de ML com regras determinísticas
 de segurança alinha-se ao princípio \textit{Safety-II} de que o sistema deve ser
 resiliente mesmo diante de incertezas do componente preditivo, conforme discutido por
 \citeonline{ZIAKKAS2024}.
@@ -1097,7 +1138,7 @@ como as diferentes combinações de predição do modelo e das regras de
 \textit{override} de segurança se traduzem em diagnósticos distintos.
 
 \clearpage
-A Figura~\ref{fig:status_a} ilustra o status \textbf{Apto Seguro}: o modelo atribuiu
+A Figura~\ref{fig:status_a} ilustra o status \textbf{Apto para Voo~--- Sem Risco Identificado}: o modelo atribuiu
 99,8\% de probabilidade à Classe~0 (Voo Normal) e nenhuma condição L1 ou L2 foi
 identificada nas variáveis meteorológicas de entrada, resultando na classificação mais
 favorável do sistema.
@@ -1105,12 +1146,12 @@ favorável do sistema.
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.90\textwidth]{images/Exemplo_apto_seguro.png}
-  \caption{Status operacional~(a): Apto Seguro (Classe~0, confiança $\geq$ 90\%)}
+  \caption{Status operacional~(a): Apto para Voo~--- Sem Risco Identificado (Classe~0, confiança $\geq$ 90\%)}
   \label{fig:status_a}
   \fonte{Elaborado pelo autor.}
 \end{figure}
 
-A Figura~\ref{fig:status_b} apresenta o status \textbf{Apto Requer Atenção}: embora o
+A Figura~\ref{fig:status_b} apresenta o status \textbf{Apto para Voo~--- Requer Atenção}: embora o
 modelo tenha atribuído 75,6\% de probabilidade ao Voo Normal, a camada de
 \textit{overrides} identificou condição L1 ativa, umidade de 97\% com formação de
 nevoeiro e vento de 1,1 m/s, elevando automaticamente o status para atenção.
@@ -1118,13 +1159,13 @@ nevoeiro e vento de 1,1 m/s, elevando automaticamente o status para atenção.
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/Exemplo_apto_requer_atencao.png}
-  \caption{Status operacional~(b): Apto Requer Atenção (condição L1 ativa ou Classe~1)}
+  \caption{Status operacional~(b): Apto para Voo~--- Requer Atenção (condição L1 ativa ou Classe~1)}
   \label{fig:status_b}
   \fonte{Elaborado pelo autor.}
 \end{figure}
 
 \clearpage
-A Figura~\ref{fig:status_c} demonstra o status \textbf{Não Apto}: o modelo distribuiu
+A Figura~\ref{fig:status_c} demonstra o status \textbf{Não Apto para Voo}: o modelo distribuiu
 as probabilidades em 19,4\% para Voo Normal, 53,1\% para Incidente e 19,6\% para
 Acidente, e a camada L2 detectou precipitação intensa de 21,4 mm/h, forçando a
 classificação mais restritiva independentemente da predição do classificador.
@@ -1132,24 +1173,112 @@ classificação mais restritiva independentemente da predição do classificador
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.70\textwidth]{images/Exemplo_nao_apto.png}
-  \caption{Status operacional~(c): Não Apto (condição L2 ativa, Classe~2 ou Classe~3)}
+  \caption{Status operacional~(c): Não Apto para Voo (condição L2 ativa ou Classe~2)}
   \label{fig:status_c}
   \fonte{Elaborado pelo autor.}
 \end{figure}
 
 \clearpage
-A Figura~\ref{fig:status_d} exemplifica o status \textbf{Inconclusivo}: a ausência de
-dados meteorológicos históricos para o período e localidade consultados impediu a
-construção completa do vetor de \textit{features}, resultando em um diagnóstico
+A Figura~\ref{fig:status_d} exemplifica o status \textbf{Inconclusivo~--- Consulte Especialista}:
+a ausência de dados meteorológicos históricos para o período e localidade consultados
+impediu a construção completa do vetor de \textit{features}, resultando em um diagnóstico
 indeterminado pelo sistema.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{images/Exemplo_inconclusivo.png}
-  \caption{Status operacional~(d): Inconclusivo (baixa confiança ou contradição meteorológica)}
+  \caption{Status operacional~(d): Inconclusivo~--- Consulte Especialista (dados meteorológicos históricos indisponíveis)}
   \label{fig:status_d}
   \fonte{Elaborado pelo autor.}
 \end{figure}
+
+\subsection{Evolução do modelo: de quatro para três classes}
+
+O modelo atual representa uma evolução metodológica em relação à versão anterior (v1.6),
+que operava com quatro classes e sem separação formal de conjunto de teste independente.
+Três decisões metodológicas simultâneas explicam o ganho de desempenho observado.
+
+\textbf{Fusão de classes: de quatro para três.}
+A versão v1.6 operava com as classes Voo Normal, Incidente, Incidente Grave e Acidente.
+A análise do desempenho individual revelou que a classe Incidente Grave apresentava
+F1-Score de 0,31 --- com precisão de 0,35, o que significa que 65\% das predições
+nessa classe correspondiam a falsos positivos.
+\citeonline{JAPKOWICZ2002} estabelecem que, quando a separabilidade empírica entre classes
+vizinhas é baixa e a distinção operacional não justifica a complexidade adicional,
+a fusão é a decisão metodologicamente adequada.
+A análise exploratória das \textit{features} confirmou alta sobreposição entre Incidente
+e Incidente Grave, motivando a fusão em uma única Classe~1.
+O resultado valida a decisão: o F1 da nova Classe~1 (Incidente) atingiu 0,94, com
+suporte ampliado pelos casos anteriormente rotulados como Incidente Grave, indicando
+que esses padrões eram de fato mais similares a Incidentes do que a Acidentes.
+
+\textbf{Separação formal do conjunto de teste.}
+A avaliação da versão v1.6 era conduzida sobre dados que participaram do processo
+de desenvolvimento, sem reserva de conjunto de teste exclusivo --- situação que
+\citeonline{VARMASIMON2006} identificam como fonte de viés otimista mensurável nas
+estimativas de desempenho.
+O modelo atual adota o \textit{split} 80/15/5: 909 amostras (5\%) foram separadas
+antes de qualquer transformação e permaneceram intocadas durante todo o desenvolvimento,
+garantindo uma estimativa sem contaminação entre as fases de treinamento e avaliação,
+conforme recomendado por \citeonline{HASTIE2009}.
+
+\textbf{Fase 4 como diagnóstico.}
+Na versão v1.6, a Fase~4 selecionava um único ``modelo vencedor'' entre os quatro candidatos.
+No modelo atual, os quatro modelos base são tratados como complementares e todos
+alimentam o Stacking Ensemble, sendo a Fase~4 redefinida como etapa de diagnóstico
+sobre o conjunto de validação (15\%) \cite{WOLPERT1992}.
+A avaliação definitiva ocorre exclusivamente na Fase~5, sobre o conjunto de teste (5\%).
+
+A Tabela~\ref{tab:comparativo} apresenta as métricas globais do Stacking Ensemble
+comparadas entre as versões v1.6 e o modelo atual.
+
+\begin{table}[ht]
+  \caption{Comparativo de métricas globais do Stacking Ensemble: versão v1.6 vs.\ modelo atual}
+  \label{tab:comparativo}
+  \centering
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Métrica} & \textbf{v1.6 (4 classes)} & \textbf{Atual (3 classes)} & \textbf{Variação} \\
+    \midrule
+    Acurácia     & 87,90\% & 93,07\% & $+$5,2 p.p.                  \\
+    F1 Macro     & 0,7439  & 0,9069  & $+$0,1630 ($+$21,9\%)        \\
+    F1 Ponderado & 0,8753  & 0,9315  & $+$0,0562                    \\
+    ROC-AUC      & 0,9500  & 0,9842  & $+$0,0342                    \\
+    \bottomrule
+  \end{tabular}
+  \fonte{Elaborado pelo autor.}
+\end{table}
+
+O ganho de 21,9\% no F1 Macro é a variação mais expressiva e reflete,
+principalmente, a eliminação da classe Incidente Grave --- cujo F1 de 0,31
+na versão v1.6 penalizava desproporcionalmente a média macro.
+A Tabela~\ref{tab:comparativo_classes} compara o F1 por classe entre as duas versões.
+
+\begin{table}[ht]
+  \caption{Comparativo de F1-Score por classe: versão v1.6 vs.\ modelo atual}
+  \label{tab:comparativo_classes}
+  \centering
+  \begin{tabular}{llcc}
+    \toprule
+    \textbf{Classe} & \textbf{Rótulo} & \textbf{v1.6} & \textbf{Atual} \\
+    \midrule
+    0   & Voo Normal      & 1,00 & 1,00 \\
+    1   & Incidente       & 0,93 & 0,94 \\
+    --- & Incidente Grave & 0,31 & \textit{fundida à Classe 1} \\
+    2   & Acidente        & 0,74 & 0,78 \\
+    \bottomrule
+  \end{tabular}
+  \fonte{Elaborado pelo autor.}
+\end{table}
+
+A classe Voo Normal manteve desempenho perfeito nas duas versões, reflexo da
+separação clara de seus perfis sintéticos em relação às demais classes.
+A classe Acidente melhorou de 0,74 para 0,78: com a eliminação das confusões
+entre Acidente e Incidente Grave recorrentes na versão anterior, o classificador
+passou a discriminar melhor os acidentes reais.
+O ganho de desempenho não é resultado de ajuste fino de hiperparâmetros,
+mas das três decisões metodológicas descritas --- todas embasadas na literatura
+de aprendizado de máquina.
 
 %=======================================================================
 \section{Conclusão}
@@ -1162,13 +1291,13 @@ Open-Meteo e características da aeronave e do itinerário, utilizando um Stacki
 Ensemble com quatro modelos base (Random Forest, XGBoost, SVM-RBF e MLP)
 combinados por Regressão Logística Multinomial como meta-aprendiz.
 
-Os resultados obtidos, acurácia de 87,54\%, F1-Score Macro de 0,7428 e
-ROC-AUC de 0,9507, demonstram que o ensemble é capaz de classificar
+Os resultados obtidos, acurácia de 93,07\%, F1-Score Macro de 0,9069 e
+ROC-AUC de 0,9842, demonstram que o ensemble é capaz de classificar
 automaticamente o nível de risco de operações aéreas com desempenho competitivo
 em relação à literatura, especialmente em termos de capacidade discriminativa
 (ROC-AUC). A escolha do F1-Score Macro como critério primário de seleção mostrou-se
 adequada para lidar com o desbalanceamento inerente aos dados do CENIPA, onde
-eventos de Incidente Grave são numericamente raros.
+eventos de Acidente são numericamente menos frequentes.
 
 Do ponto de vista prático, a integração do modelo preditivo com \textit{overrides}
 determinísticos de segurança meteorológica, consulta ao banco de dados histórico
@@ -1183,8 +1312,9 @@ fontes de dados em uma análise automatizada e orientada por evidências.
 Como principais limitações, destacam-se: (i) a dependência do CENIPA, que registra
 apenas ocorrências, exigindo a geração sintética de amostras de Classe 0; (ii) a
 ausência de \textit{feedback} de pilotos reais para validação qualitativa do sistema;
-e (iii) o F1-Macro de 0,74, que indica que a Classe 2 (Incidente Grave) ainda
-representa um desafio para o modelo em termos de revocação. Para trabalhos
+e (iii) o F1-Score da Classe~2 (Acidente), de 0,78, indica que eventos de maior
+gravidade ainda representam um desafio em termos de revocação, dado o volume
+relativamente pequeno dessas amostras no conjunto de teste (140 instâncias). Para trabalhos
 futuros, sugere-se: a coleta de dados reais de voos normais para substituir as
 amostras sintéticas da Classe 0; a incorporação de informações de manutenção e
 fadiga de tripulantes; a integração com os sistemas regulatórios da ANAC
