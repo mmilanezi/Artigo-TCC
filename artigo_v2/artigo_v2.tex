@@ -1169,7 +1169,7 @@ mais relevantes.
 \end{table}
 
 \textbf{Fusão de classes: de quatro para três.}
-A classe Incidente Grave apresentava F1-Score de 0,31 na versão 1.6 ---
+A classe Incidente Grave apresentava F1-Score de 0,31 na versão 1.6
 com precisão de 0,35, o que significa que 65\% das predições nessa classe
 correspondiam a falsos positivos.
 \citeonline{JAPKOWICZ2002} estabelecem que, quando a separabilidade empírica entre classes
@@ -1183,7 +1183,7 @@ que esses padrões eram de fato mais similares a Incidentes do que a Acidentes.
 
 \textbf{Separação formal do conjunto de teste.}
 A avaliação das versões anteriores era conduzida sobre dados que participaram do processo
-de desenvolvimento, sem reserva de conjunto de teste exclusivo --- situação que
+de desenvolvimento, sem reserva de conjunto de teste exclusivo, situação que
 \citeonline{VARMASIMON2006} identificam como fonte de viés otimista mensurável nas
 estimativas de desempenho.
 A versão 2.0 adota o particionamento 80\%/15\%/5\%: 909 amostras (5\%) foram separadas
@@ -1220,7 +1220,7 @@ A Tabela~\ref{tab:comparativo} detalha as métricas globais comparadas entre as 
 \end{table}
 
 O ganho de 21,9\% no F1 Macro é a variação mais expressiva e reflete,
-principalmente, a eliminação da classe Incidente Grave --- cujo F1 de 0,31
+principalmente, a eliminação da classe Incidente Grave, cujo F1 de 0,31
 na versão 1.6 penalizava desproporcionalmente a média macro.
 A Tabela~\ref{tab:comparativo_classes} compara o F1 por classe entre as duas versões.
 
@@ -1247,7 +1247,7 @@ A classe Acidente melhorou de 0,74 para 0,78: com a eliminação das confusões
 entre Acidente e Incidente Grave recorrentes na versão 1.6, o classificador
 passou a discriminar melhor os acidentes reais.
 O avanço da versão 2.0 não é resultado de ajuste fino de hiperparâmetros,
-mas de três decisões metodológicas embasadas na literatura --- o que confere
+mas de três decisões metodológicas embasadas na literatura, o que confere
 maior robustez e reprodutibilidade ao processo de desenvolvimento.
 
 %=======================================================================
@@ -1355,18 +1355,5 @@ impediu a construção completa do vetor de \textit{features}, resultando em dia
   \label{fig:status_d}
   \fonte{Elaborado pelo autor.}
 \end{figure}
-
-%=======================================================================
-\section{Relatórios em PDF Gerados pelo Sistema}
-\label{ap:relatorios}
-%=======================================================================
-
-As figuras a seguir apresentam exemplos de relatórios técnicos em PDF gerados
-pelo sistema para diferentes cenários de avaliação pré-voo. Os relatórios
-contêm cabeçalho institucional, status geral com código visual de cores,
-dados da aeronave e do itinerário, análise por ponto, recomendações e
-diagnóstico do modelo.
-
-% TODO: inserir aqui as capturas de tela dos relatórios em PDF e da interface.
 
 \end{document}
